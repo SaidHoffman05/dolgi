@@ -3,56 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Семейные Долги</title>
+    <title>Семейный менеджер долгов</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --primary-color: #4e73df;
-            --secondary-color: #f8f9fc;
-            --accent-color: #2e59d9;
+            --secondary-color: #1cc88a;
+            --danger-color: #e74a3b;
+            --warning-color: #f6c23e;
+            --dark-color: #5a5c69;
         }
         
         body {
-            background-color: var(--secondary-color);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Nunito', sans-serif;
+            background-color: #f8f9fc;
+        }
+        
+        .sidebar {
+            background: linear-gradient(180deg, var(--primary-color) 10%, #224abe 100%);
             min-height: 100vh;
         }
         
-        .navbar {
-            background-color: var(--primary-color) !important;
-            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.2rem;
         }
         
-        .navbar-brand {
-            font-weight: 600;
-            font-size: 1.2rem;
+        .sidebar .nav-link.active {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar .nav-link:hover {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.1);
         }
         
         .card {
             border: none;
             border-radius: 0.35rem;
-            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
-            margin-bottom: 1.5rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
         }
         
         .card-header {
             background-color: #f8f9fc;
             border-bottom: 1px solid #e3e6f0;
-            font-weight: 600;
-        }
-        
-        .nav-tabs .nav-link {
-            color: #6e707e;
-            font-weight: 500;
-            border: none;
-            padding: 1rem 1.5rem;
-        }
-        
-        .nav-tabs .nav-link.active {
-            color: var(--primary-color);
-            border-bottom: 3px solid var(--primary-color);
-            background: transparent;
+            font-weight: 700;
         }
         
         .btn-primary {
@@ -60,295 +59,357 @@
             border-color: var(--primary-color);
         }
         
-        .btn-primary:hover {
-            background-color: var(--accent-color);
-            border-color: var(--accent-color);
+        .btn-success {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
         }
         
-        .table th {
-            border-top: none;
-            font-weight: 600;
-            color: #6e707e;
+        .btn-danger {
+            background-color: var(--danger-color);
+            border-color: var(--danger-color);
         }
         
-        .action-buttons .btn {
-            padding: 0.25rem 0.5rem;
-            font-size: 0.875rem;
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                min-height: auto;
+                height: auto;
+            }
+            .content {
+                padding: 1rem;
+            }
         }
         
         .calculator {
-            background-color: #f8f9fa;
-            border-radius: 0.35rem;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
+            background-color: #f8f9fc;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
         }
         
         .calculator-display {
-            background-color: white;
+            background-color: #fff;
             border: 1px solid #e3e6f0;
-            border-radius: 0.25rem;
-            padding: 0.75rem;
-            margin-bottom: 1rem;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 15px;
             text-align: right;
             font-size: 1.5rem;
-            font-weight: 600;
+            height: 60px;
         }
         
         .calculator-btn {
             width: 100%;
-            margin-bottom: 0.5rem;
+            height: 50px;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
         }
         
-        @media (max-width: 768px) {
-            .nav-tabs .nav-link {
-                padding: 0.75rem;
-                font-size: 0.9rem;
-            }
-            
-            .navbar-brand {
-                font-size: 1rem;
-            }
-            
-            .btn {
-                padding: 0.375rem 0.75rem;
-                font-size: 0.875rem;
-            }
-            
-            .table-responsive {
-                margin-left: -15px;
-                margin-right: -15px;
-            }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .debt-paid {
+            color: var(--secondary-color);
+            text-decoration: line-through;
+        }
+        
+        .debt-unpaid {
+            color: var(--danger-color);
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <!-- Навигация -->
-    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                <i class="fas fa-hand-holding-usd me-2"></i>Семейные Долги
-            </a>
-            <div id="user-menu" class="d-flex align-items-center">
-                <span class="navbar-text text-white me-2" id="user-info"></span>
-                <button class="btn btn-outline-light btn-sm" id="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i>
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="bg-primary sidebar text-white" id="sidebar-wrapper">
+            <div class="sidebar-heading text-center py-4">
+                <h3>Семейные долги</h3>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="#" class="nav-link active" data-tab="debts">
+                    <i class="fas fa-list me-2"></i>Список долгов
+                </a>
+                <a href="#" class="nav-link" data-tab="calculator">
+                    <i class="fas fa-calculator me-2"></i>Калькулятор
+                </a>
+                <a href="#" class="nav-link admin-only" data-tab="users" style="display: none;">
+                    <i class="fas fa-users me-2"></i>Пользователи
+                </a>
+                <a href="#" class="nav-link admin-only" data-tab="settings" style="display: none;">
+                    <i class="fas fa-cog me-2"></i>Настройки
+                </a>
+            </div>
+            <div class="px-3 py-4">
+                <div class="d-flex align-items-center">
+                    <div class="user-avatar me-2" id="user-avatar">U</div>
+                    <div>
+                        <div class="fw-bold" id="username-display">Гость</div>
+                        <div class="small" id="user-role-display">Не авторизован</div>
+                    </div>
+                </div>
+                <button class="btn btn-sm btn-light w-100 mt-3" id="logout-btn" style="display: none;">
+                    <i class="fas fa-sign-out-alt me-1"></i>Выйти
+                </button>
+                <button class="btn btn-sm btn-success w-100 mt-3" id="login-btn">
+                    <i class="fas fa-sign-in-alt me-1"></i>Войти
                 </button>
             </div>
         </div>
-    </nav>
 
-    <!-- Основной контент -->
-    <div class="container">
-        <!-- Форма входа -->
-        <div id="login-form" class="card shadow-lg">
-            <div class="card-body p-5">
-                <div class="text-center mb-4">
-                    <h2><i class="fas fa-sign-in-alt me-2"></i>Вход в систему</h2>
-                    <p class="text-muted">Введите свои учетные данные</p>
-                </div>
-                <div id="login-error" class="alert alert-danger d-none mb-3"></div>
-                <form id="loginForm">
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Логин</label>
-                        <input type="text" class="form-control" id="username" required>
-                    </div>
-                    <div class="mb-4">
-                        <label for="password" class="form-label">Пароль</label>
-                        <input type="password" class="form-control" id="password" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">
-                        <i class="fas fa-sign-in-alt me-1"></i>Войти
+        <!-- Page content -->
+        <div class="container-fluid content" id="page-content-wrapper">
+            <!-- Debts Tab -->
+            <div class="tab-content" id="debts-tab">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0">Список долгов</h2>
+                    <button class="btn btn-primary admin-only" id="add-debt-btn" style="display: none;">
+                        <i class="fas fa-plus me-1"></i>Добавить долг
                     </button>
-                </form>
+                </div>
+                
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 font-weight-bold">Все долги</h6>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-filter"></i> Фильтр
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item filter-option" href="#" data-filter="all">Все</a></li>
+                                <li><a class="dropdown-item filter-option" href="#" data-filter="paid">Оплаченные</a></li>
+                                <li><a class="dropdown-item filter-option" href="#" data-filter="unpaid">Неоплаченные</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="debts-table" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Кому</th>
+                                        <th>Что купили</th>
+                                        <th>Дата</th>
+                                        <th>Сумма</th>
+                                        <th>Оплачено</th>
+                                        <th>Остаток</th>
+                                        <th class="admin-only" style="display: none;">Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="debts-list">
+                                    <!-- Debts will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <!-- Основное приложение -->
-        <div id="app" class="d-none">
-            <!-- Вкладки -->
-            <ul class="nav nav-tabs mb-4" id="mainTabs">
-                <li class="nav-item">
-                    <a class="nav-link active" id="debts-tab" data-bs-toggle="tab" href="#debts-content">
-                        <i class="fas fa-list me-1"></i> Долги
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="calculator-tab" data-bs-toggle="tab" href="#calculator-content">
-                        <i class="fas fa-calculator me-1"></i> Калькулятор
-                    </a>
-                </li>
-                <li class="nav-item admin-only">
-                    <a class="nav-link" id="users-tab" data-bs-toggle="tab" href="#users-content">
-                        <i class="fas fa-users me-1"></i> Пользователи
-                    </a>
-                </li>
-            </ul>
-
-            <!-- Контент вкладок -->
-            <div class="tab-content">
-                <!-- Вкладка долгов -->
-                <div class="tab-pane fade show active" id="debts-content">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4><i class="fas fa-list me-2"></i>Список долгов</h4>
-                        <button class="btn btn-success admin-only" id="add-debt-btn">
-                            <i class="fas fa-plus me-1"></i> Добавить
-                        </button>
+            
+            <!-- Calculator Tab -->
+            <div class="tab-content" id="calculator-tab" style="display: none;">
+                <h2 class="mb-4">Калькулятор</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="calculator">
+                            <div class="calculator-display" id="calc-display">0</div>
+                            <div class="row">
+                                <div class="col-3"><button class="btn btn-secondary calculator-btn" data-value="7">7</button></div>
+                                <div class="col-3"><button class="btn btn-secondary calculator-btn" data-value="8">8</button></div>
+                                <div class="col-3"><button class="btn btn-secondary calculator-btn" data-value="9">9</button></div>
+                                <div class="col-3"><button class="btn btn-warning calculator-btn" data-value="/">/</button></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3"><button class="btn btn-secondary calculator-btn" data-value="4">4</button></div>
+                                <div class="col-3"><button class="btn btn-secondary calculator-btn" data-value="5">5</button></div>
+                                <div class="col-3"><button class="btn btn-secondary calculator-btn" data-value="6">6</button></div>
+                                <div class="col-3"><button class="btn btn-warning calculator-btn" data-value="*">×</button></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3"><button class="btn btn-secondary calculator-btn" data-value="1">1</button></div>
+                                <div class="col-3"><button class="btn btn-secondary calculator-btn" data-value="2">2</button></div>
+                                <div class="col-3"><button class="btn btn-secondary calculator-btn" data-value="3">3</button></div>
+                                <div class="col-3"><button class="btn btn-warning calculator-btn" data-value="-">-</button></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3"><button class="btn btn-secondary calculator-btn" data-value="0">0</button></div>
+                                <div class="col-3"><button class="btn btn-secondary calculator-btn" data-value=".">.</button></div>
+                                <div class="col-3"><button class="btn btn-success calculator-btn" id="calc-equals">=</button></div>
+                                <div class="col-3"><button class="btn btn-warning calculator-btn" data-value="+">+</button></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6"><button class="btn btn-danger calculator-btn" id="calc-clear">C</button></div>
+                                <div class="col-6"><button class="btn btn-info calculator-btn" id="calc-backspace">⌫</button></div>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div class="card shadow">
-                        <div class="card-body p-0">
-                            <div class="table-responsive">
-                                <table class="table table-hover mb-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Кто должен</th>
-                                            <th>Кому должен</th>
-                                            <th>Сумма</th>
-                                            <th>Описание</th>
-                                            <th>Дата</th>
-                                            <th class="admin-only">Действия</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="debts-table"></tbody>
-                                </table>
+                    <div class="col-md-6">
+                        <div class="card shadow">
+                            <div class="card-header">
+                                <h6 class="m-0 font-weight-bold">История вычислений</h6>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group" id="calc-history">
+                                    <!-- Calculation history will appear here -->
+                                </ul>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Вкладка калькулятора -->
-                <div class="tab-pane fade" id="calculator-content">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h4><i class="fas fa-calculator me-2"></i>Калькулятор долгов</h4>
-                            <div class="calculator shadow">
-                                <div class="calculator-display" id="calc-display">0</div>
-                                <div class="row">
-                                    <div class="col-3"><button class="btn btn-secondary calculator-btn" onclick="calcInput('7')">7</button></div>
-                                    <div class="col-3"><button class="btn btn-secondary calculator-btn" onclick="calcInput('8')">8</button></div>
-                                    <div class="col-3"><button class="btn btn-secondary calculator-btn" onclick="calcInput('9')">9</button></div>
-                                    <div class="col-3"><button class="btn btn-danger calculator-btn" onclick="clearCalc()">C</button></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-3"><button class="btn btn-secondary calculator-btn" onclick="calcInput('4')">4</button></div>
-                                    <div class="col-3"><button class="btn btn-secondary calculator-btn" onclick="calcInput('5')">5</button></div>
-                                    <div class="col-3"><button class="btn btn-secondary calculator-btn" onclick="calcInput('6')">6</button></div>
-                                    <div class="col-3"><button class="btn btn-warning calculator-btn" onclick="calcInput('+')">+</button></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-3"><button class="btn btn-secondary calculator-btn" onclick="calcInput('1')">1</button></div>
-                                    <div class="col-3"><button class="btn btn-secondary calculator-btn" onclick="calcInput('2')">2</button></div>
-                                    <div class="col-3"><button class="btn btn-secondary calculator-btn" onclick="calcInput('3')">3</button></div>
-                                    <div class="col-3"><button class="btn btn-warning calculator-btn" onclick="calcInput('-')">-</button></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-3"><button class="btn btn-secondary calculator-btn" onclick="calcInput('0')">0</button></div>
-                                    <div class="col-3"><button class="btn btn-secondary calculator-btn" onclick="calcInput('.')">.</button></div>
-                                    <div class="col-6"><button class="btn btn-primary calculator-btn" onclick="calculate()">=</button></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <h4><i class="fas fa-info-circle me-2"></i>Инструкция</h4>
-                            <div class="card shadow">
-                                <div class="card-body">
-                                    <p>Используйте калькулятор для расчета долгов:</p>
-                                    <ul>
-                                        <li>Вводите суммы с помощью цифр</li>
-                                        <li>Используйте "+" и "-" для сложения/вычитания</li>
-                                        <li>Нажмите "=" для получения результата</li>
-                                        <li>Кнопка "C" очищает калькулятор</li>
-                                    </ul>
-                                    <p class="mb-0">Результат можно использовать при добавлении новых долгов.</p>
-                                </div>
-                            </div>
+            </div>
+            
+            <!-- Users Tab -->
+            <div class="tab-content" id="users-tab" style="display: none;">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0">Пользователи</h2>
+                    <button class="btn btn-primary owner-only" id="add-user-btn" style="display: none;">
+                        <i class="fas fa-plus me-1"></i>Добавить пользователя
+                    </button>
+                </div>
+                
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold">Список пользователей</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="users-table" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Имя</th>
+                                        <th>Логин</th>
+                                        <th>Роль</th>
+                                        <th class="owner-only" style="display: none;">Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-list">
+                                    <!-- Users will be loaded here -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-
-                <!-- Вкладка пользователей (только для админа) -->
-                <div class="tab-pane fade" id="users-content">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4><i class="fas fa-users me-2"></i>Управление пользователями</h4>
-                        <button class="btn btn-success" id="add-user-btn">
-                            <i class="fas fa-plus me-1"></i> Добавить
-                        </button>
+            </div>
+            
+            <!-- Settings Tab -->
+            <div class="tab-content" id="settings-tab" style="display: none;">
+                <h2 class="mb-4">Настройки</h2>
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold">Настройки системы</h6>
                     </div>
-                    
-                    <div class="card shadow">
-                        <div class="card-body p-0">
-                            <div class="table-responsive">
-                                <table class="table table-hover mb-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Логин</th>
-                                            <th>Роль</th>
-                                            <th>Дата регистрации</th>
-                                            <th>Действия</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="users-table"></tbody>
-                                </table>
+                    <div class="card-body">
+                        <form id="settings-form">
+                            <div class="mb-3">
+                                <label for="system-name" class="form-label">Название системы</label>
+                                <input type="text" class="form-control" id="system-name" value="Семейные долги">
                             </div>
-                        </div>
+                            <div class="mb-3">
+                                <label for="currency" class="form-label">Валюта</label>
+                                <select class="form-select" id="currency">
+                                    <option value="₽">Рубли (₽)</option>
+                                    <option value="$">Доллары ($)</option>
+                                    <option value="€">Евро (€)</option>
+                                    <option value="₴">Гривны (₴)</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Сохранить</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Модальное окно добавления/редактирования долга -->
-    <div class="modal fade" id="debtModal" tabindex="-1">
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="debtModalTitle">Добавить долг</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title">Вход в систему</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div id="debt-error" class="alert alert-danger d-none mb-3"></div>
-                    <form id="debtForm">
+                    <form id="login-form">
                         <div class="mb-3">
-                            <label for="debt-from" class="form-label">Кто должен</label>
-                            <input type="text" class="form-control" id="debt-from" required>
+                            <label for="login-username" class="form-label">Логин</label>
+                            <input type="text" class="form-control" id="login-username" required>
                         </div>
                         <div class="mb-3">
-                            <label for="debt-to" class="form-label">Кому должен</label>
-                            <input type="text" class="form-control" id="debt-to" required>
+                            <label for="login-password" class="form-label">Пароль</label>
+                            <input type="password" class="form-control" id="login-password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Войти</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Debt Modal -->
+    <div class="modal fade" id="debtModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Добавить долг</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="debt-form">
+                        <input type="hidden" id="debt-id">
+                        <div class="mb-3">
+                            <label for="debt-person" class="form-label">Кому должны</label>
+                            <input type="text" class="form-control" id="debt-person" required>
                         </div>
                         <div class="mb-3">
-                            <label for="debt-amount" class="form-label">Сумма (₽)</label>
-                            <input type="number" step="0.01" class="form-control" id="debt-amount" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="debt-description" class="form-label">Описание</label>
-                            <textarea class="form-control" id="debt-description" rows="3"></textarea>
+                            <label for="debt-item" class="form-label">Что купили</label>
+                            <input type="text" class="form-control" id="debt-item" required>
                         </div>
                         <div class="mb-3">
                             <label for="debt-date" class="form-label">Дата</label>
                             <input type="date" class="form-control" id="debt-date" required>
                         </div>
+                        <div class="mb-3">
+                            <label for="debt-amount" class="form-label">Сумма</label>
+                            <input type="number" step="0.01" class="form-control" id="debt-amount" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="debt-paid" class="form-label">Оплачено</label>
+                            <input type="number" step="0.01" class="form-control" id="debt-paid" value="0">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                    <button type="button" class="btn btn-primary" id="save-debt-btn">Сохранить</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Модальное окно добавления/редактирования пользователя -->
-    <div class="modal fade" id="userModal" tabindex="-1">
+    <!-- Add User Modal -->
+    <div class="modal fade" id="userModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="userModalTitle">Добавить пользователя</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title">Добавить пользователя</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div id="user-error" class="alert alert-danger d-none mb-3"></div>
-                    <form id="userForm">
+                    <form id="user-form">
+                        <input type="hidden" id="user-id">
+                        <div class="mb-3">
+                            <label for="user-name" class="form-label">Имя</label>
+                            <input type="text" class="form-control" id="user-name" required>
+                        </div>
                         <div class="mb-3">
                             <label for="user-username" class="form-label">Логин</label>
                             <input type="text" class="form-control" id="user-username" required>
@@ -365,11 +426,34 @@
                                 <option value="owner">Владелец</option>
                             </select>
                         </div>
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                    <button type="button" class="btn btn-primary" id="save-user-btn">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Добавить платеж</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="payment-form">
+                        <input type="hidden" id="payment-debt-id">
+                        <div class="mb-3">
+                            <label for="payment-amount" class="form-label">Сумма платежа</label>
+                            <input type="number" step="0.01" class="form-control" id="payment-amount" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="payment-date" class="form-label">Дата платежа</label>
+                            <input type="date" class="form-control" id="payment-date" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Добавить платеж</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -377,461 +461,587 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-    // Глобальные переменные
-    let currentUser = null;
-    let currentDebtId = null;
-    let currentUserId = null;
-    let calcValue = '0';
-    let calcOperation = '';
-    let calcPrevValue = '0';
-
-    // Инициализация при загрузке
-    document.addEventListener('DOMContentLoaded', function() {
-        initDatabase();
-        
-        // Проверка авторизации
-        const savedUser = localStorage.getItem('currentUser');
-        if (savedUser) {
-            try {
-                currentUser = JSON.parse(savedUser);
-                showApp();
-            } catch(e) {
-                localStorage.removeItem('currentUser');
-                showLogin();
-            }
-        } else {
-            showLogin();
-        }
-
-        // Обработчики событий
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            handleLogin();
-        });
-        
-        document.getElementById('logout-btn').addEventListener('click', logout);
-        document.getElementById('add-debt-btn').addEventListener('click', showAddDebtModal);
-        document.getElementById('add-user-btn').addEventListener('click', showAddUserModal);
-        document.getElementById('save-debt-btn').addEventListener('click', saveDebt);
-        document.getElementById('save-user-btn').addEventListener('click', saveUser);
-        
-        // Инициализация калькулятора
-        updateCalcDisplay();
-    });
-
-    // Инициализация базы данных
-    function initDatabase() {
-        if (!localStorage.getItem('users')) {
-            const users = [
-                { 
-                    id: 1, 
-                    username: 'admin', 
-                    password: 'admin123', 
-                    role: 'owner', 
-                    created_at: new Date().toISOString() 
-                },
-                { 
-                    id: 2, 
-                    username: 'user1', 
-                    password: '123456', 
-                    role: 'user', 
-                    created_at: new Date().toISOString() 
-                }
-            ];
-            localStorage.setItem('users', JSON.stringify(users));
-        }
-        
-        if (!localStorage.getItem('debts')) {
-            const debts = [
-                {
-                    id: 1,
-                    from_user: 'Иван',
-                    to_user: 'Мария',
-                    amount: 1500.50,
-                    description: 'За продукты',
-                    date: new Date().toISOString(),
-                    created_at: new Date().toISOString()
-                },
-                {
-                    id: 2,
-                    from_user: 'Петр',
-                    to_user: 'Ольга',
-                    amount: 2500,
-                    description: 'За ремонт',
-                    date: new Date().toISOString(),
-                    created_at: new Date().toISOString()
-                }
-            ];
-            localStorage.setItem('debts', JSON.stringify(debts));
-        }
-    }
-
-    // Обработка входа
-    function handleLogin() {
-        const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value.trim();
-        const errorElement = document.getElementById('login-error');
-
-        if (!username || !password) {
-            showError(errorElement, 'Заполните все поля');
-            return;
-        }
-
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        const user = users.find(u => u.username === username && u.password === password);
-        
-        if (user) {
-            currentUser = {
-                id: user.id,
-                username: user.username,
-                role: user.role
-            };
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            showApp();
-        } else {
-            showError(errorElement, 'Неверный логин или пароль');
-        }
-    }
-
-    // Выход из системы
-    function logout() {
-        localStorage.removeItem('currentUser');
-        currentUser = null;
-        showLogin();
-    }
-
-    // Показать основное приложение
-    function showApp() {
-        document.getElementById('login-form').classList.add('d-none');
-        document.getElementById('app').classList.remove('d-none');
-        updateUIForRole();
-        loadDebts();
-        loadUsers();
-    }
-
-    // Показать форму входа
-    function showLogin() {
-        document.getElementById('login-form').classList.remove('d-none');
-        document.getElementById('app').classList.add('d-none');
-        document.getElementById('username').value = '';
-        document.getElementById('password').value = '';
-        document.getElementById('username').focus();
-    }
-
-    // Обновить интерфейс в зависимости от роли
-    function updateUIForRole() {
-        const userInfoEl = document.getElementById('user-info');
-        if (userInfoEl) {
-            let roleName = '';
-            switch(currentUser.role) {
-                case 'owner': roleName = 'Владелец'; break;
-                case 'admin': roleName = 'Администратор'; break;
-                default: roleName = 'Пользователь';
-            }
-            userInfoEl.textContent = `${currentUser.username} (${roleName})`;
-        }
-
-        // Показываем/скрываем элементы для админа и владельца
-        const isAdmin = currentUser.role === 'admin' || currentUser.role === 'owner';
-        document.querySelectorAll('.admin-only').forEach(el => {
-            el.style.display = isAdmin ? '' : 'none';
-        });
-    }
-
-    // Загрузить список долгов
-    function loadDebts() {
-        const debts = JSON.parse(localStorage.getItem('debts')) || [];
-        const table = document.getElementById('debts-table');
-        
-        table.innerHTML = debts.map(debt => {
-            const canEdit = currentUser.role === 'admin' || currentUser.role === 'owner';
-            const actions = canEdit ? `
-                <td class="action-buttons">
-                    <button class="btn btn-sm btn-warning" onclick="editDebt(${debt.id})">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger" onclick="deleteDebt(${debt.id})">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </td>
-            ` : '<td></td>';
-            
-            return `
-                <tr>
-                    <td>${debt.from_user}</td>
-                    <td>${debt.to_user}</td>
-                    <td>${debt.amount.toFixed(2)} ₽</td>
-                    <td>${debt.description || '-'}</td>
-                    <td>${formatDate(debt.date)}</td>
-                    ${actions}
-                </tr>
-            `;
-        }).join('');
-    }
-
-    // Показать модальное окно добавления долга
-    function showAddDebtModal() {
-        currentDebtId = null;
-        document.getElementById('debtModalTitle').textContent = 'Добавить долг';
-        document.getElementById('debt-from').value = '';
-        document.getElementById('debt-to').value = '';
-        document.getElementById('debt-amount').value = '';
-        document.getElementById('debt-description').value = '';
-        document.getElementById('debt-date').valueAsDate = new Date();
-        hideError('debt-error');
-        
-        const modal = new bootstrap.Modal(document.getElementById('debtModal'));
-        modal.show();
-    }
-
-    // Редактировать долг
-    function editDebt(id) {
-        const debts = JSON.parse(localStorage.getItem('debts'));
-        const debt = debts.find(d => d.id === id);
-        
-        if (debt) {
-            currentDebtId = id;
-            document.getElementById('debtModalTitle').textContent = 'Редактировать долг';
-            document.getElementById('debt-from').value = debt.from_user;
-            document.getElementById('debt-to').value = debt.to_user;
-            document.getElementById('debt-amount').value = debt.amount;
-            document.getElementById('debt-description').value = debt.description || '';
-            document.getElementById('debt-date').value = debt.date.split('T')[0];
-            hideError('debt-error');
-            
-            const modal = new bootstrap.Modal(document.getElementById('debtModal'));
-            modal.show();
-        }
-    }
-
-    // Сохранить долг
-    function saveDebt() {
-        const debtData = {
-            id: currentDebtId || Date.now(),
-            from_user: document.getElementById('debt-from').value.trim(),
-            to_user: document.getElementById('debt-to').value.trim(),
-            amount: parseFloat(document.getElementById('debt-amount').value),
-            description: document.getElementById('debt-description').value.trim(),
-            date: document.getElementById('debt-date').value,
-            created_at: new Date().toISOString()
+        // Database simulation
+        let db = {
+            settings: {
+                systemName: "Семейные долги",
+                currency: "₽"
+            },
+            users: [
+                { id: 1, name: "Владелец", username: "owner", password: "owner123", role: "owner" },
+                { id: 2, name: "Админ", username: "admin", password: "admin123", role: "admin" },
+                { id: 3, name: "Пользователь", username: "user", password: "user123", role: "user" }
+            ],
+            debts: [
+                { id: 1, person: "Мама", item: "Продукты", date: "2023-05-15", amount: 2500, paid: 1500, payments: [
+                    { date: "2023-05-20", amount: 1000 },
+                    { date: "2023-05-25", amount: 500 }
+                ]},
+                { id: 2, person: "Папа", item: "Бензин", date: "2023-05-18", amount: 5000, paid: 0, payments: [] },
+                { id: 3, person: "Брат", item: "Кино", date: "2023-05-20", amount: 1200, paid: 1200, payments: [
+                    { date: "2023-05-22", amount: 1200 }
+                ]}
+            ],
+            calcHistory: []
         };
 
-        if (!debtData.from_user || !debtData.to_user || isNaN(debtData.amount) {
-            showError('debt-error', 'Заполните все обязательные поля');
-            return;
-        }
+        // Current user
+        let currentUser = null;
 
-        let debts = JSON.parse(localStorage.getItem('debts'));
-        
-        if (currentDebtId) {
-            const index = debts.findIndex(d => d.id === currentDebtId);
-            debts[index] = debtData;
-        } else {
-            debts.push(debtData);
-        }
+        // DOM elements
+        const loginBtn = document.getElementById('login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+        const loginForm = document.getElementById('login-form');
+        const usernameDisplay = document.getElementById('username-display');
+        const userRoleDisplay = document.getElementById('user-role-display');
+        const userAvatar = document.getElementById('user-avatar');
+        const adminElements = document.querySelectorAll('.admin-only');
+        const ownerElements = document.querySelectorAll('.owner-only');
+        const debtsList = document.getElementById('debts-list');
+        const usersList = document.getElementById('users-list');
+        const addDebtBtn = document.getElementById('add-debt-btn');
+        const debtModal = new bootstrap.Modal(document.getElementById('debtModal'));
+        const debtForm = document.getElementById('debt-form');
+        const addUserBtn = document.getElementById('add-user-btn');
+        const userModal = new bootstrap.Modal(document.getElementById('userModal'));
+        const userForm = document.getElementById('user-form');
+        const paymentModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+        const paymentForm = document.getElementById('payment-form');
+        const calcDisplay = document.getElementById('calc-display');
+        const calcHistory = document.getElementById('calc-history');
+        const settingsForm = document.getElementById('settings-form');
+        const tabLinks = document.querySelectorAll('[data-tab]');
+        const tabContents = {
+            'debts': document.getElementById('debts-tab'),
+            'calculator': document.getElementById('calculator-tab'),
+            'users': document.getElementById('users-tab'),
+            'settings': document.getElementById('settings-tab')
+        };
+        const filterOptions = document.querySelectorAll('.filter-option');
+        let currentFilter = 'all';
 
-        localStorage.setItem('debts', JSON.stringify(debts));
-        bootstrap.Modal.getInstance(document.getElementById('debtModal')).hide();
-        loadDebts();
-    }
+        // Calculator state
+        let calcState = {
+            currentValue: '0',
+            previousValue: null,
+            operation: null,
+            waitingForOperand: false
+        };
 
-    // Удалить долг
-    function deleteDebt(id) {
-        if (confirm('Вы уверены, что хотите удалить этот долг?')) {
-            let debts = JSON.parse(localStorage.getItem('debts'));
-            debts = debts.filter(d => d.id !== id);
-            localStorage.setItem('debts', JSON.stringify(debts));
-            loadDebts();
-        }
-    }
-
-    // Загрузить список пользователей
-    function loadUsers() {
-        const users = JSON.parse(localStorage.getItem('users'));
-        const table = document.getElementById('users-table');
-        
-        if (!table) return;
-        
-        table.innerHTML = users.map(user => {
-            const canEdit = currentUser.role === 'owner' || (currentUser.role === 'admin' && user.role !== 'owner');
-            const isCurrentUser = user.id === currentUser.id;
+        // Initialize the app
+        function init() {
+            // Load settings
+            document.getElementById('system-name').value = db.settings.systemName;
+            document.getElementById('currency').value = db.settings.currency;
             
-            let roleName = '';
-            switch(user.role) {
-                case 'owner': roleName = 'Владелец'; break;
-                case 'admin': roleName = 'Администратор'; break;
-                default: roleName = 'Пользователь';
+            // Event listeners
+            loginBtn.addEventListener('click', () => loginModal.show());
+            logoutBtn.addEventListener('click', logout);
+            loginForm.addEventListener('submit', handleLogin);
+            addDebtBtn.addEventListener('click', () => {
+                debtForm.reset();
+                document.getElementById('debt-id').value = '';
+                debtModal.show();
+            });
+            debtForm.addEventListener('submit', handleDebtSubmit);
+            addUserBtn.addEventListener('click', () => {
+                userForm.reset();
+                document.getElementById('user-id').value = '';
+                userModal.show();
+            });
+            userForm.addEventListener('submit', handleUserSubmit);
+            paymentForm.addEventListener('submit', handlePaymentSubmit);
+            settingsForm.addEventListener('submit', handleSettingsSubmit);
+            
+            // Tab switching
+            tabLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const tabName = link.getAttribute('data-tab');
+                    switchTab(tabName);
+                });
+            });
+            
+            // Filter options
+            filterOptions.forEach(option => {
+                option.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    currentFilter = option.getAttribute('data-filter');
+                    renderDebts();
+                });
+            });
+            
+            // Calculator buttons
+            document.querySelectorAll('.calculator-btn[data-value]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const value = btn.getAttribute('data-value');
+                    handleCalcInput(value);
+                });
+            });
+            
+            document.getElementById('calc-equals').addEventListener('click', handleCalcEquals);
+            document.getElementById('calc-clear').addEventListener('click', handleCalcClear);
+            document.getElementById('calc-backspace').addEventListener('click', handleCalcBackspace);
+            
+            // Check if user is logged in from localStorage
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                updateUI();
+            }
+        }
+
+        // Switch between tabs
+        function switchTab(tabName) {
+            // Update active tab link
+            tabLinks.forEach(link => {
+                if (link.getAttribute('data-tab') === tabName) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+            
+            // Show/hide tab contents
+            for (const [key, content] of Object.entries(tabContents)) {
+                if (key === tabName) {
+                    content.style.display = 'block';
+                } else {
+                    content.style.display = 'none';
+                }
             }
             
-            return `
-                <tr>
-                    <td>${user.username}</td>
-                    <td>${roleName}</td>
-                    <td>${formatDate(user.created_at)}</td>
-                    <td class="action-buttons">
-                        ${(currentUser.role === 'admin' || currentUser.role === 'owner') ? `
-                        <button class="btn btn-sm btn-warning" onclick="editUser(${user.id})" ${!canEdit ? 'disabled' : ''}>
+            // Load data if needed
+            if (tabName === 'debts') {
+                renderDebts();
+            } else if (tabName === 'users' && currentUser?.role === 'owner') {
+                renderUsers();
+            }
+        }
+
+        // Handle login
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            
+            const user = db.users.find(u => u.username === username && u.password === password);
+            
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                updateUI();
+                loginModal.hide();
+                loginForm.reset();
+                renderDebts();
+            } else {
+                alert('Неверный логин или пароль');
+            }
+        }
+
+        // Handle logout
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            updateUI();
+            switchTab('debts');
+        }
+
+        // Update UI based on current user
+        function updateUI() {
+            if (currentUser) {
+                usernameDisplay.textContent = currentUser.name;
+                userRoleDisplay.textContent = getRoleName(currentUser.role);
+                userAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
+                loginBtn.style.display = 'none';
+                logoutBtn.style.display = 'block';
+                
+                // Show/hide admin elements
+                adminElements.forEach(el => {
+                    el.style.display = currentUser.role === 'admin' || currentUser.role === 'owner' ? 'block' : 'none';
+                });
+                
+                // Show/hide owner elements
+                ownerElements.forEach(el => {
+                    el.style.display = currentUser.role === 'owner' ? 'block' : 'none';
+                });
+            } else {
+                usernameDisplay.textContent = 'Гость';
+                userRoleDisplay.textContent = 'Не авторизован';
+                userAvatar.textContent = 'G';
+                loginBtn.style.display = 'block';
+                logoutBtn.style.display = 'none';
+                
+                // Hide all admin/owner elements
+                adminElements.forEach(el => el.style.display = 'none');
+                ownerElements.forEach(el => el.style.display = 'none');
+            }
+        }
+
+        // Get role name for display
+        function getRoleName(role) {
+            switch (role) {
+                case 'owner': return 'Владелец';
+                case 'admin': return 'Администратор';
+                case 'user': return 'Пользователь';
+                default: return 'Неизвестно';
+            }
+        }
+
+        // Render debts list
+        function renderDebts() {
+            debtsList.innerHTML = '';
+            
+            let filteredDebts = db.debts;
+            
+            if (currentFilter === 'paid') {
+                filteredDebts = db.debts.filter(debt => debt.paid >= debt.amount);
+            } else if (currentFilter === 'unpaid') {
+                filteredDebts = db.debts.filter(debt => debt.paid < debt.amount);
+            }
+            
+            filteredDebts.forEach(debt => {
+                const row = document.createElement('tr');
+                const remaining = debt.amount - debt.paid;
+                
+                row.innerHTML = `
+                    <td>${debt.person}</td>
+                    <td>${debt.item}</td>
+                    <td>${formatDate(debt.date)}</td>
+                    <td>${formatCurrency(debt.amount)}</td>
+                    <td class="${debt.paid >= debt.amount ? 'debt-paid' : 'debt-unpaid'}">${formatCurrency(debt.paid)}</td>
+                    <td>${formatCurrency(remaining)}</td>
+                    ${currentUser?.role === 'admin' || currentUser?.role === 'owner' ? `
+                    <td>
+                        <button class="btn btn-sm btn-success payment-btn" data-id="${debt.id}" title="Добавить платеж">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </button>
+                        <button class="btn btn-sm btn-primary edit-debt-btn" data-id="${debt.id}" title="Редактировать">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteUser(${user.id})" ${isCurrentUser || user.role === 'owner' ? 'disabled' : ''}>
+                        <button class="btn btn-sm btn-danger delete-debt-btn" data-id="${debt.id}" title="Удалить">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                    ` : ''}
+                `;
+                
+                debtsList.appendChild(row);
+            });
+            
+            // Add event listeners to buttons
+            document.querySelectorAll('.payment-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const debtId = parseInt(btn.getAttribute('data-id'));
+                    const debt = db.debts.find(d => d.id === debtId);
+                    
+                    document.getElementById('payment-debt-id').value = debtId;
+                    document.getElementById('payment-amount').max = debt.amount - debt.paid;
+                    document.getElementById('payment-amount').value = '';
+                    document.getElementById('payment-date').value = new Date().toISOString().split('T')[0];
+                    
+                    paymentModal.show();
+                });
+            });
+            
+            document.querySelectorAll('.edit-debt-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const debtId = parseInt(btn.getAttribute('data-id'));
+                    const debt = db.debts.find(d => d.id === debtId);
+                    
+                    document.getElementById('debt-id').value = debt.id;
+                    document.getElementById('debt-person').value = debt.person;
+                    document.getElementById('debt-item').value = debt.item;
+                    document.getElementById('debt-date').value = debt.date;
+                    document.getElementById('debt-amount').value = debt.amount;
+                    document.getElementById('debt-paid').value = debt.paid;
+                    
+                    debtModal.show();
+                });
+            });
+            
+            document.querySelectorAll('.delete-debt-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    if (confirm('Вы уверены, что хотите удалить этот долг?')) {
+                        const debtId = parseInt(btn.getAttribute('data-id'));
+                        db.debts = db.debts.filter(d => d.id !== debtId);
+                        renderDebts();
+                    }
+                });
+            });
+        }
+
+        // Render users list
+        function renderUsers() {
+            usersList.innerHTML = '';
+            
+            db.users.forEach(user => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${user.name}</td>
+                    <td>${user.username}</td>
+                    <td>${getRoleName(user.role)}</td>
+                    ${currentUser?.role === 'owner' ? `
+                    <td>
+                        <button class="btn btn-sm btn-primary edit-user-btn" data-id="${user.id}" title="Редактировать">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        ${user.role !== 'owner' ? `
+                        <button class="btn btn-sm btn-danger delete-user-btn" data-id="${user.id}" title="Удалить">
                             <i class="fas fa-trash"></i>
                         </button>
                         ` : ''}
                     </td>
-                </tr>
-            `;
-        }).join('');
-    }
-
-    // Показать модальное окно добавления пользователя
-    function showAddUserModal() {
-        currentUserId = null;
-        document.getElementById('userModalTitle').textContent = 'Добавить пользователя';
-        document.getElementById('user-username').value = '';
-        document.getElementById('user-password').value = '';
-        document.getElementById('user-role').value = 'user';
-        hideError('user-error');
-        
-        const modal = new bootstrap.Modal(document.getElementById('userModal'));
-        modal.show();
-    }
-
-    // Редактировать пользователя
-    function editUser(id) {
-        const users = JSON.parse(localStorage.getItem('users'));
-        const user = users.find(u => u.id === id);
-        
-        if (user) {
-            currentUserId = id;
-            document.getElementById('userModalTitle').textContent = 'Редактировать пользователя';
-            document.getElementById('user-username').value = user.username;
-            document.getElementById('user-password').value = '';
-            document.getElementById('user-role').value = user.role;
-            hideError('user-error');
+                    ` : ''}
+                `;
+                
+                usersList.appendChild(row);
+            });
             
-            const modal = new bootstrap.Modal(document.getElementById('userModal'));
-            modal.show();
-        }
-    }
-
-    // Сохранить пользователя
-    function saveUser() {
-        const username = document.getElementById('user-username').value.trim();
-        const password = document.getElementById('user-password').value;
-        const role = document.getElementById('user-role').value;
-
-        if (!username || !password) {
-            showError('user-error', 'Заполните все поля');
-            return;
-        }
-
-        // Проверка прав для установки роли
-        if (currentUser.role !== 'owner' && role === 'owner') {
-            showError('user-error', 'Только владелец может создавать других владельцев');
-            return;
-        }
-
-        let users = JSON.parse(localStorage.getItem('users'));
-        const userData = {
-            id: currentUserId || Date.now(),
-            username,
-            password,
-            role,
-            created_at: new Date().toISOString()
-        };
-
-        if (currentUserId) {
-            const index = users.findIndex(u => u.id === currentUserId);
+            // Add event listeners to buttons
+            document.querySelectorAll('.edit-user-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const userId = parseInt(btn.getAttribute('data-id'));
+                    const user = db.users.find(u => u.id === userId);
+                    
+                    document.getElementById('user-id').value = user.id;
+                    document.getElementById('user-name').value = user.name;
+                    document.getElementById('user-username').value = user.username;
+                    document.getElementById('user-password').value = user.password;
+                    document.getElementById('user-role').value = user.role;
+                    
+                    userModal.show();
+                });
+            });
             
-            // Проверка прав на редактирование
-            if (users[index].role === 'owner' && currentUser.role !== 'owner') {
-                showError('user-error', 'Только владелец может редактировать других владельцев');
+            document.querySelectorAll('.delete-user-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    if (confirm('Вы уверены, что хотите удалить этого пользователя?')) {
+                        const userId = parseInt(btn.getAttribute('data-id'));
+                        db.users = db.users.filter(u => u.id !== userId);
+                        renderUsers();
+                    }
+                });
+            });
+        }
+
+        // Handle debt form submission
+        function handleDebtSubmit(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('debt-id').value;
+            const person = document.getElementById('debt-person').value;
+            const item = document.getElementById('debt-item').value;
+            const date = document.getElementById('debt-date').value;
+            const amount = parseFloat(document.getElementById('debt-amount').value);
+            const paid = parseFloat(document.getElementById('debt-paid').value);
+            
+            if (id) {
+                // Update existing debt
+                const debtIndex = db.debts.findIndex(d => d.id === parseInt(id));
+                if (debtIndex !== -1) {
+                    db.debts[debtIndex] = {
+                        ...db.debts[debtIndex],
+                        person,
+                        item,
+                        date,
+                        amount,
+                        paid
+                    };
+                }
+            } else {
+                // Add new debt
+                const newId = db.debts.length > 0 ? Math.max(...db.debts.map(d => d.id)) + 1 : 1;
+                db.debts.push({
+                    id: newId,
+                    person,
+                    item,
+                    date,
+                    amount,
+                    paid,
+                    payments: []
+                });
+            }
+            
+            debtModal.hide();
+            renderDebts();
+        }
+
+        // Handle user form submission
+        function handleUserSubmit(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('user-id').value;
+            const name = document.getElementById('user-name').value;
+            const username = document.getElementById('user-username').value;
+            const password = document.getElementById('user-password').value;
+            const role = document.getElementById('user-role').value;
+            
+            if (id) {
+                // Update existing user
+                const userIndex = db.users.findIndex(u => u.id === parseInt(id));
+                if (userIndex !== -1) {
+                    db.users[userIndex] = {
+                        ...db.users[userIndex],
+                        name,
+                        username,
+                        password,
+                        role
+                    };
+                }
+            } else {
+                // Add new user
+                const newId = db.users.length > 0 ? Math.max(...db.users.map(u => u.id)) + 1 : 1;
+                db.users.push({
+                    id: newId,
+                    name,
+                    username,
+                    password,
+                    role
+                });
+            }
+            
+            userModal.hide();
+            renderUsers();
+        }
+
+        // Handle payment form submission
+        function handlePaymentSubmit(e) {
+            e.preventDefault();
+            
+            const debtId = parseInt(document.getElementById('payment-debt-id').value);
+            const amount = parseFloat(document.getElementById('payment-amount').value);
+            const date = document.getElementById('payment-date').value;
+            
+            const debt = db.debts.find(d => d.id === debtId);
+            if (debt) {
+                debt.paid += amount;
+                debt.payments.push({
+                    date,
+                    amount
+                });
+            }
+            
+            paymentModal.hide();
+            renderDebts();
+        }
+
+        // Handle settings form submission
+        function handleSettingsSubmit(e) {
+            e.preventDefault();
+            
+            db.settings.systemName = document.getElementById('system-name').value;
+            db.settings.currency = document.getElementById('currency').value;
+            
+            alert('Настройки сохранены');
+        }
+
+        // Calculator functions
+        function handleCalcInput(value) {
+            const { currentValue, waitingForOperand } = calcState;
+            
+            if (waitingForOperand) {
+                calcState.currentValue = String(value);
+                calcState.waitingForOperand = false;
+            } else {
+                calcState.currentValue = currentValue === '0' ? String(value) : currentValue + value;
+            }
+            
+            updateCalcDisplay();
+        }
+
+        function handleCalcEquals() {
+            const { currentValue, previousValue, operation } = calcState;
+            
+            if (operation === null || previousValue === null) {
                 return;
             }
             
-            users[index] = userData;
-        } else {
-            // Проверка на существующего пользователя
-            if (users.some(u => u.username === username)) {
-                showError('user-error', 'Пользователь с таким логином уже существует');
+            const prev = parseFloat(previousValue);
+            const current = parseFloat(currentValue);
+            let result;
+            
+            switch (operation) {
+                case '+':
+                    result = prev + current;
+                    break;
+                case '-':
+                    result = prev - current;
+                    break;
+                case '*':
+                    result = prev * current;
+                    break;
+                case '/':
+                    result = prev / current;
+                    break;
+                default:
+                    return;
+            }
+            
+            // Save to history
+            const historyItem = `${previousValue} ${operation} ${currentValue} = ${result}`;
+            db.calcHistory.unshift(historyItem);
+            updateCalcHistory();
+            
+            calcState.currentValue = String(result);
+            calcState.previousValue = null;
+            calcState.operation = null;
+            calcState.waitingForOperand = true;
+            
+            updateCalcDisplay();
+        }
+
+        function handleCalcClear() {
+            calcState = {
+                currentValue: '0',
+                previousValue: null,
+                operation: null,
+                waitingForOperand: false
+            };
+            
+            updateCalcDisplay();
+        }
+
+        function handleCalcBackspace() {
+            const { currentValue, waitingForOperand } = calcState;
+            
+            if (waitingForOperand) {
                 return;
             }
-            users.push(userData);
+            
+            calcState.currentValue = currentValue.length === 1 ? '0' : currentValue.slice(0, -1);
+            updateCalcDisplay();
         }
 
-        localStorage.setItem('users', JSON.stringify(users));
-        bootstrap.Modal.getInstance(document.getElementById('userModal')).hide();
-        loadUsers();
-        
-        // Если редактировали текущего пользователя - обновляем данные
-        if (currentUserId === currentUser?.id) {
-            currentUser.username = username;
-            currentUser.role = role;
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            updateUIForRole();
+        function updateCalcDisplay() {
+            calcDisplay.textContent = calcState.currentValue;
         }
-    }
 
-    // Удалить пользователя
-    function deleteUser(id) {
-        if (confirm('Вы уверены, что хотите удалить этого пользователя?')) {
-            let users = JSON.parse(localStorage.getItem('users'));
-            users = users.filter(u => u.id !== id);
-            localStorage.setItem('users', JSON.stringify(users));
-            loadUsers();
+        function updateCalcHistory() {
+            calcHistory.innerHTML = '';
+            
+            db.calcHistory.slice(0, 5).forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item';
+                li.textContent = item;
+                calcHistory.appendChild(li);
+            });
         }
-    }
 
-    // Функции калькулятора
-    function calcInput(value) {
-        if (calcValue === '0' && value !== '.') {
-            calcValue = value;
-        } else {
-            calcValue += value;
+        // Helper functions
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('ru-RU', options);
         }
-        updateCalcDisplay();
-    }
 
-    function clearCalc() {
-        calcValue = '0';
-        calcOperation = '';
-        calcPrevValue = '0';
-        updateCalcDisplay();
-    }
-
-    function calculate() {
-        if (calcOperation === '+') {
-            calcValue = (parseFloat(calcPrevValue) + parseFloat(calcValue)).toString();
-        } else if (calcOperation === '-') {
-            calcValue = (parseFloat(calcPrevValue) - parseFloat(calcValue)).toString();
+        function formatCurrency(amount) {
+            return `${db.settings.currency} ${amount.toFixed(2)}`;
         }
-        calcOperation = '';
-        calcPrevValue = '0';
-        updateCalcDisplay();
-    }
 
-    function updateCalcDisplay() {
-        document.getElementById('calc-display').textContent = calcValue;
-    }
-
-    // Вспомогательные функции
-    function formatDate(dateString) {
-        return new Date(dateString).toLocaleDateString('ru-RU');
-    }
-
-    function showError(elementId, message) {
-        const element = document.getElementById(elementId);
-        if (element) {
-            element.textContent = message;
-            element.classList.remove('d-none');
-            setTimeout(() => element.classList.add('d-none'), 5000);
-        }
-    }
-
-    function hideError(elementId) {
-        const element = document.getElementById(elementId);
-        if (element) element.classList.add('d-none');
-    }
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
