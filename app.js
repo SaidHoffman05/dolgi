@@ -76,7 +76,7 @@ function handleLogin() {
         loginBtn.disabled = true;
         loginBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> Вход...';
         
-        setTimeout(() => { // Добавляем задержку для мобильных устройств
+        setTimeout(() => {
             login();
             loginBtn.disabled = false;
             loginBtn.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i>Войти';
@@ -101,16 +101,15 @@ function login() {
 
     try {
         const users = JSON.parse(localStorage.getItem('users')) || [];
-        console.log('Все пользователи:', users); // Отладочная информация
+        console.log('Все пользователи:', users);
         
-        // Поиск пользователя без учета регистра и с точным совпадением пароля
         const user = users.find(u => 
             u.username.toLowerCase() === username.toLowerCase() && 
             u.password === password
         );
 
         if (user) {
-            console.log('Найден пользователь:', user); // Отладочная информация
+            console.log('Найден пользователь:', user);
             currentUser = {
                 id: user.id,
                 username: user.username,
@@ -119,7 +118,7 @@ function login() {
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
             showApp();
         } else {
-            console.log('Неверные данные. Введено:', { username, password }); // Отладочная информация
+            console.log('Неверные данные. Введено:', { username, password });
             showError(errorElement, 'Неверный логин или пароль');
             document.getElementById('password').value = '';
         }
