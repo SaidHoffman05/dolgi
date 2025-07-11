@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('logout-btn')?.addEventListener('click', logout);
     document.getElementById('add-debt-btn')?.addEventListener('click', showAddDebtModal);
     document.getElementById('add-user-btn')?.addEventListener('click', showAddUserModal);
+
+    // Улучшение для мобильных устройств - фокус на поле ввода при загрузке
+    document.getElementById('username')?.focus();
 });
 
 // Глобальные переменные
@@ -111,16 +114,10 @@ function loadDebts() {
     const debts = JSON.parse(localStorage.getItem('debts')) || [];
     const table = document.getElementById('debts-table');
     
-    table.innerHTML = debts.map(debt => `
-        <tr>
-            <td>${debt.from_user}</td>
-            <td>${debt.to_user}</td>
-            <td>${debt.amount.toFixed(2)} ₽</td>
-            <td>${debt.paid.toFixed(2)} ₽</td>
-            <td>${(debt.amount - debt.paid).toFixed(2)} ₽</td>
-            <td>${debt.description || '-'}</td>
-            <td>${new Date(debt.created_at).toLocaleDateString('ru-RU')}</td>
-            <td class="admin-only">
+    table.innerHTML = debts.map(debt => {
+        const isAdmin = currentUser && ['admin', 'owner'].includes(currentUser.role.toLowerCase());
+        const actions = isAdmin ? `
+            <td class="action-buttons">
                 <button class="btn btn-sm btn-warning me-2" onclick="editDebt(${debt.id})">
                     <i class="fas fa-edit"></i>
                 </button>
@@ -128,8 +125,21 @@ function loadDebts() {
                     <i class="fas fa-trash"></i>
                 </button>
             </td>
-        </tr>
-    `).join('');
+        ` : '<td></td>';
+
+        return `
+            <tr>
+                <td>${debt.from_user}</td>
+                <td>${debt.to_user}</td>
+                <td>${debt.amount.toFixed(2)} ₽</td>
+                <td>${debt.paid.toFixed(2)} ₽</td>
+                <td>${(debt.amount - debt.paid).toFixed(2)} ₽</td>
+                <td>${debt.description || '-'}</td>
+                <td>${new Date(debt.created_at).toLocaleDateString('ru-RU')}</td>
+                ${actions}
+            </tr>
+        `;
+    }).join('');
 }
 
 // Показать модальное окно для добавления долга
@@ -220,7 +230,7 @@ function loadUsers() {
             <td>${user.username}</td>
             <td>${getRoleName(user.role)}</td>
             <td>${new Date(user.created_at).toLocaleDateString('ru-RU')}</td>
-            <td>
+            <td class="action-buttons">
                 ${currentUser?.role === 'owner' ? `
                 <button class="btn btn-sm btn-warning me-2" onclick="editUser(${user.id})" ${user.id === 1 ? 'disabled' : ''}>
                     <i class="fas fa-edit"></i>
