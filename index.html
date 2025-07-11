@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Семейные Долги</title>
+    <link rel="icon" href="logo.ico" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="styles.css" rel="stylesheet">
+    <style>
+        /* Стили для системы защиты */
+        .protection-alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 99999;
+            animation: protectionFadeIn 0.3s;
+        }
+        .protection-alert-content {
+            padding: 12px 16px;
+            background: #ff4444;
+            color: white;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+        .protection-alert i {
+            margin-right: 8px;
+        }
+        .fade-out {
+            animation: protectionFadeOut 0.3s forwards;
+        }
+        @keyframes protectionFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes protectionFadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-20px); }
+        }
+        
+        /* Стили для блокировки DevTools */
+        .devtools-block {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 999999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .devtools-block-content {
+            max-width: 500px;
+            padding: 30px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Система защиты -->
+    <script>
+    // ===== УСИЛЕННАЯ СИСТЕМА ЗАЩИТЫ ===== //
+    (function() {
+        'use strict';
+        
+        const protection = {
+            triggered: false,
+            devToolsOpened: false,
+            
+            showAlert(message, icon = 'fa-lock') {
+                if (this.triggered) return;
+                
+                this.triggered = true;
+                const alert = document.createElement('div');
+                alert.className = 'protection-alert';
+                alert.innerHTML = `
+                    <div class="protection-alert-content">
+                        <i class="fas ${icon}"></i>
+                        <span>${message}</span>
+                    </div>
+                `;
+                document.body.appendChild(alert);
+                
+                setTimeout(() => {
+                    alert.classList.add('fade-out');
+                    setTimeout(() => {
+                        alert.remove();
+                        this.triggered = false;
+                    }, 300);
+                }, 3000);
+            },
+            
+            isEditable(element) {
+                const editableTags = ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'];
+                return element.isContentEditable || 
+                       editableTags.includes(element.tagName) ||
+                       element.classList.contains('allow-action');
+            },
+            
+            blockDevTools() {
+                if (this.devToolsOpened) return;
+                
+                this.devToolsOpened = true;
+                const blocker = document.createElement('div');
+                blocker.className = 'devtools-block';
+                blocker.innerHTML = `
+                    <div class="devtools-block-content">
+                        <i class="fas fa-ban text-danger" style="font-size: 3rem;"></i>
+                        <h2 class="mt-3">Доступ запрещен</h2>
+                        <p class="mt-3">Обнаружены инструменты разработчика</p>
+                        <p>Для продолжения работы закройте DevTools и обновите страницу</p>
+                    </div>
+                `;
+                document.body.innerHTML = '';
+                document.body.appendChild(blocker);
+                
+                // Дополнительные меры
+                document.body.style.overflow = 'hidden';
+                window.addEventListener('keydown', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+            },
+            
+            init() {
+                // 1. Блокировка контекстного меню
+                document.addEventListener('contextmenu', (e) => {
+                    if (!this.isEditable(e.target)) {
+                        e.preventDefault();
+                        this.showAlert('Контекстное меню отключено', 'fa-mouse-pointer');
+                    }
+                });
+
+                // 2. Блокировка горячих клавиш
+                document.addEventListener('keydown', (e) => {
+                    if (this.isEditable(e.target)) return;
+                    
+                    const forbiddenKeys = {
+                        'F12': 'Инструменты разработчика',
+                        'F8': 'Отладка',
+                        'Control+U': 'Просмотр кода',
+                        'Control+Shift+I': 'DevTools',
+                        'Control+Shift+J': 'Консоль',
+                        'Control+Shift+C': 'Инспектор',
+                        'Control+S': 'Сохранение страницы'
+                    };
+                    
+                    const keyCombination = [
+                        e.ctrlKey ? 'Control+' : '',
+                        e.shiftKey ? 'Shift+' : '',
+                        e.altKey ? 'Alt+' : '',
+                        e.key
+                    ].join('');
+                    
+                    if (forbiddenKeys[e.key] || forbiddenKeys[keyCombination]) {
+                        e.preventDefault();
+                        this.showAlert(`Запрещено: ${forbiddenKeys[e.key] || forbiddenKeys[keyCombination]}`, 'fa-keyboard');
+                    }
+                });
+
+                // 3. Защита от копирования
+                document.addEventListener('copy', (e) => {
+                    if (!this.isEditable(e.target)) {
+                        e.preventDefault();
+                        this.showAlert('Копирование запрещено', 'fa-copy');
+                    }
+                });
+
+                // 4. Защита от вставки
+                document.addEventListener('paste', (e) => {
+                    if (!this.isEditable(e.target)) {
+                        e.preventDefault();
+                        this.showAlert('Вставка запрещена', 'fa-paste');
+                    }
+                });
+
+                // 5. Защита от перетаскивания
+                document.addEventListener('dragstart', (e) => {
+                    if (!this.isEditable(e.target)) {
+                        e.preventDefault();
+                        this.showAlert('Перетаскивание запрещено', 'fa-arrows-alt');
+                    }
+                });
+
+                // 6. Детектирование DevTools
+                const detectDevTools = () => {
+                    const threshold = 160;
+                    const widthDiff = window.outerWidth - window.innerWidth;
+                    const heightDiff = window.outerHeight - window.innerHeight;
+                    
+                    if ((widthDiff > threshold || heightDiff > threshold) && !document.hidden) {
+                        this.blockDevTools();
+                    }
+                };
+                
+                setInterval(detectDevTools, 1000);
+                
+                // 7. Защита от переопределения
+                Object.freeze(this);
+            }
+        };
+        
+        protection.init();
+    })();
+    </script>
+
+    <!-- Ваше оригинальное приложение -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-hand-holding-usd me-2"></i>Семейные Долги
+            </a>
+            <div id="user-menu" class="d-flex align-items-center">
+                <span class="navbar-text text-white me-3" id="user-info"></span>
+                <button class="btn btn-outline-light" id="logout-btn">
+                    <i class="fas fa-sign-out-alt me-1"></i>Выйти
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div id="login-form" class="card shadow mb-4">
+            <div class="card-body">
+                <h2 class="text-center mb-4"><i class="fas fa-sign-in-alt me-2"></i>Вход в систему</h2>
+                <div id="login-error" class="alert alert-danger d-none"></div>
+                <div class="mb-3">
+                    <label for="username" class="form-label">Логин</label>
+                    <input type="text" class="form-control" id="username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Пароль</label>
+                    <input type="password" class="form-control" id="password" required>
+                </div>
+                <button id="login-btn" class="btn btn-primary w-100">
+                    <i class="fas fa-sign-in-alt me-2"></i>Войти
+                </button>
+            </div>
+        </div>
+
+        <div id="app" class="d-none">
+            <div class="card shadow">
+                <div class="card-header bg-white p-0">
+                    <ul class="nav nav-tabs" id="mainTabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="debts-tab" data-bs-toggle="tab" href="#debts-content">
+                                <i class="fas fa-list me-2"></i>Долги
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="calculator-tab" data-bs-toggle="tab" href="#calculator-content">
+                                <i class="fas fa-calculator me-2"></i>Калькулятор
+                            </a>
+                        </li>
+                        <li class="nav-item admin-only">
+                            <a class="nav-link" id="users-tab" data-bs-toggle="tab" href="#users-content">
+                                <i class="fas fa-users me-2"></i>Пользователи
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="card-body tab-content" id="mainTabsContent">
+                    <div class="tab-pane fade show active" id="debts-content">
+                        <div class="d-flex justify-content-between mb-3">
+                            <h4><i class="fas fa-list me-2"></i>Список долгов</h4>
+                            <button class="btn btn-success admin-only" id="add-debt-btn">
+                                <i class="fas fa-plus me-2"></i>Добавить долг
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Кто должен</th>
+                                        <th>Кому должен</th>
+                                        <th>Сумма</th>
+                                        <th>Оплачено</th>
+                                        <th>Остаток</th>
+                                        <th>Описание</th>
+                                        <th>Дата</th>
+                                        <th class="admin-only">Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="debts-table"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane fade" id="calculator-content">
+                        <h4 class="mb-4"><i class="fas fa-calculator me-2"></i>Калькулятор выплат</h4>
+                        <div class="calculator">
+                            <div class="calculator-display bg-light p-3 mb-3 rounded" id="calc-display">0</div>
+                            <div class="calculator-buttons">
+                                <div class="row g-2 mb-2">
+                                    <div class="col-3"><button class="btn btn-secondary w-100" onclick="calcInput('7')">7</button></div>
+                                    <div class="col-3"><button class="btn btn-secondary w-100" onclick="calcInput('8')">8</button></div>
+                                    <div class="col-3"><button class="btn btn-secondary w-100" onclick="calcInput('9')">9</button></div>
+                                    <div class="col-3"><button class="btn btn-warning w-100" onclick="setCalcOperation('/')">/</button></div>
+                                </div>
+                                <div class="row g-2 mb-2">
+                                    <div class="col-3"><button class="btn btn-secondary w-100" onclick="calcInput('4')">4</button></div>
+                                    <div class="col-3"><button class="btn btn-secondary w-100" onclick="calcInput('5')">5</button></div>
+                                    <div class="col-3"><button class="btn btn-secondary w-100" onclick="calcInput('6')">6</button></div>
+                                    <div class="col-3"><button class="btn btn-warning w-100" onclick="setCalcOperation('*')">×</button></div>
+                                </div>
+                                <div class="row g-2 mb-2">
+                                    <div class="col-3"><button class="btn btn-secondary w-100" onclick="calcInput('1')">1</button></div>
+                                    <div class="col-3"><button class="btn btn-secondary w-100" onclick="calcInput('2')">2</button></div>
+                                    <div class="col-3"><button class="btn btn-secondary w-100" onclick="calcInput('3')">3</button></div>
+                                    <div class="col-3"><button class="btn btn-warning w-100" onclick="setCalcOperation('-')">-</button></div>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-3"><button class="btn btn-secondary w-100" onclick="calcInput('0')">0</button></div>
+                                    <div class="col-3"><button class="btn btn-secondary w-100" onclick="calcInput('.')">.</button></div>
+                                    <div class="col-3"><button class="btn btn-danger w-100" onclick="clearCalc()">C</button></div>
+                                    <div class="col-3"><button class="btn btn-warning w-100" onclick="setCalcOperation('+')">+</button></div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <button class="btn btn-success w-100" onclick="calculate()">=</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-pane fade" id="users-content">
+                        <div class="d-flex justify-content-between mb-3">
+                            <h4><i class="fas fa-users me-2"></i>Управление пользователями</h4>
+                            <button class="btn btn-success admin-only" id="add-user-btn">
+                                <i class="fas fa-plus me-2"></i>Добавить пользователя
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Логин</th>
+                                        <th>Роль</th>
+                                        <th>Дата регистрации</th>
+                                        <th>Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-table"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="debtModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="debtModalTitle">Добавить долг</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="debt-error" class="alert alert-danger d-none"></div>
+                    <div class="mb-3">
+                        <label for="debt-from" class="form-label">Кто должен</label>
+                        <input type="text" class="form-control" id="debt-from" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="debt-to" class="form-label">Кому должен</label>
+                        <input type="text" class="form-control" id="debt-to" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="debt-amount" class="form-label">Сумма</label>
+                        <input type="number" step="0.01" class="form-control" id="debt-amount" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="debt-paid" class="form-label">Оплачено</label>
+                        <input type="number" step="0.01" class="form-control" id="debt-paid" value="0">
+                    </div>
+                    <div class="mb-3">
+                        <label for="debt-description" class="form-label">Описание</label>
+                        <textarea class="form-control" id="debt-description" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-primary" onclick="saveDebt()">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="userModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userModalTitle">Добавить пользователя</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="user-error" class="alert alert-danger d-none"></div>
+                    <div class="mb-3">
+                        <label for="user-username" class="form-label">Логин</label>
+                        <input type="text" class="form-control" id="user-username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="user-password" class="form-label">Пароль</label>
+                        <input type="password" class="form-control" id="user-password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="user-role" class="form-label">Роль</label>
+                        <select class="form-select" id="user-role">
+                            <option value="user">Пользователь</option>
+                            <option value="admin">Администратор</option>
+                            <option value="owner">Владелец</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-primary" onclick="saveUser()">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="global-error" class="alert alert-danger position-fixed bottom-0 end-0 m-3 d-none" style="z-index: 1000;"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
