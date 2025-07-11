@@ -5,8 +5,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Проверка авторизованного пользователя
     const savedUser = localStorage.getItem('currentUser');
     if (savedUser) {
-        currentUser = JSON.parse(savedUser);
-        showApp();
+        try {
+            currentUser = JSON.parse(savedUser);
+            showApp();
+        } catch (e) {
+            localStorage.removeItem('currentUser');
+            showLogin();
+        }
     }
 
     // Назначение обработчиков событий
@@ -16,7 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('add-user-btn')?.addEventListener('click', showAddUserModal);
 
     // Улучшение для мобильных устройств - фокус на поле ввода при загрузке
-    document.getElementById('username')?.focus();
+    const usernameInput = document.getElementById('username');
+    if (usernameInput) {
+        usernameInput.focus();
+        usernameInput.value = usernameInput.value.trim();
+    }
 });
 
 // Глобальные переменные
@@ -31,7 +40,7 @@ function initDatabase() {
             { 
                 id: 1, 
                 username: 'admin', 
-                password: 'admin123',  // В реальном приложении пароль должен быть хэширован
+                password: 'admin123',
                 role: 'owner', 
                 created_at: new Date().toISOString() 
             }
@@ -54,8 +63,11 @@ function login() {
         return;
     }
 
-    const users = JSON.parse(localStorage.getItem('users'));
-    const user = users.find(u => u.username === username && u.password === password);
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const user = users.find(u => 
+        u.username.toLowerCase() === username.toLowerCase() && 
+        u.password === password
+    );
 
     if (user) {
         currentUser = {
@@ -67,6 +79,9 @@ function login() {
         showApp();
     } else {
         showError('login-error', 'Неверный логин или пароль');
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+        document.getElementById('username').focus();
     }
 }
 
