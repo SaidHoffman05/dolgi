@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Инициализация базы данных
+    // Инициализация базы данных с тестовым пользователем
     initDatabase();
     
     // Проверка авторизованного пользователя
@@ -9,22 +9,26 @@ document.addEventListener('DOMContentLoaded', () => {
             currentUser = JSON.parse(savedUser);
             showApp();
         } catch (e) {
+            console.error('Ошибка парсинга пользователя:', e);
             localStorage.removeItem('currentUser');
             showLogin();
         }
     }
 
     // Назначение обработчиков событий
-    document.getElementById('login-btn')?.addEventListener('click', login);
+    const loginBtn = document.getElementById('login-btn');
+    if (loginBtn) {
+        loginBtn.addEventListener('click', handleLogin);
+    }
+    
     document.getElementById('logout-btn')?.addEventListener('click', logout);
     document.getElementById('add-debt-btn')?.addEventListener('click', showAddDebtModal);
     document.getElementById('add-user-btn')?.addEventListener('click', showAddUserModal);
 
-    // Улучшение для мобильных устройств - фокус на поле ввода при загрузке
+    // Автофокус на поле логина
     const usernameInput = document.getElementById('username');
     if (usernameInput) {
         usernameInput.focus();
-        usernameInput.value = usernameInput.value.trim();
     }
 });
 
@@ -33,55 +37,95 @@ let currentUser = null;
 let currentDebtId = null;
 let currentUserId = null;
 
-// Инициализация базы данных
+// Инициализация базы данных с тестовым пользователем
 function initDatabase() {
-    if (!localStorage.getItem('users')) {
-        const defaultUsers = [
-            { 
-                id: 1, 
-                username: 'admin', 
-                password: 'admin123',
-                role: 'owner', 
-                created_at: new Date().toISOString() 
-            }
-        ];
-        localStorage.setItem('users', JSON.stringify(defaultUsers));
-    }
-    
-    if (!localStorage.getItem('debts')) {
-        localStorage.setItem('debts', JSON.stringify([]));
+    try {
+        if (!localStorage.getItem('users')) {
+            const defaultUsers = [
+                { 
+                    id: 1, 
+                    username: 'admin', 
+                    password: 'admin123',
+                    role: 'owner', 
+                    created_at: new Date().toISOString() 
+                },
+                // Добавляем тестового пользователя
+                { 
+                    id: 2, 
+                    username: '123', 
+                    password: '123',
+                    role: 'user', 
+                    created_at: new Date().toISOString() 
+                }
+            ];
+            localStorage.setItem('users', JSON.stringify(defaultUsers));
+        }
+        
+        if (!localStorage.getItem('debts')) {
+            localStorage.setItem('debts', JSON.stringify([]));
+        }
+    } catch (e) {
+        console.error('Ошибка инициализации базы данных:', e);
     }
 }
 
-// Функция входа в систему
+// Обработчик входа с улучшенной обработкой ошибок
+function handleLogin() {
+    const loginBtn = document.getElementById('login-btn');
+    try {
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> Вход...';
+        
+        setTimeout(() => { // Добавляем задержку для мобильных устройств
+            login();
+            loginBtn.disabled = false;
+            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i>Войти';
+        }, 300);
+    } catch (e) {
+        console.error('Ошибка входа:', e);
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i>Войти';
+    }
+}
+
+// Функция входа в систему с улучшенной проверкой
 function login() {
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim();
+    const errorElement = document.getElementById('login-error');
 
     if (!username || !password) {
-        showError('login-error', 'Заполните все поля');
+        showError(errorElement, 'Заполните все поля');
         return;
     }
 
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-    const user = users.find(u => 
-        u.username.toLowerCase() === username.toLowerCase() && 
-        u.password === password
-    );
+    try {
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        console.log('Все пользователи:', users); // Отладочная информация
+        
+        // Поиск пользователя без учета регистра и с точным совпадением пароля
+        const user = users.find(u => 
+            u.username.toLowerCase() === username.toLowerCase() && 
+            u.password === password
+        );
 
-    if (user) {
-        currentUser = {
-            id: user.id,
-            username: user.username,
-            role: user.role
-        };
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-        showApp();
-    } else {
-        showError('login-error', 'Неверный логин или пароль');
-        document.getElementById('username').value = '';
-        document.getElementById('password').value = '';
-        document.getElementById('username').focus();
+        if (user) {
+            console.log('Найден пользователь:', user); // Отладочная информация
+            currentUser = {
+                id: user.id,
+                username: user.username,
+                role: user.role
+            };
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            showApp();
+        } else {
+            console.log('Неверные данные. Введено:', { username, password }); // Отладочная информация
+            showError(errorElement, 'Неверный логин или пароль');
+            document.getElementById('password').value = '';
+        }
+    } catch (e) {
+        console.error('Ошибка при входе:', e);
+        showError(errorElement, 'Ошибка системы. Попробуйте позже.');
     }
 }
 
@@ -366,12 +410,21 @@ function getRoleName(role) {
     return roles[role] || role;
 }
 
-function showError(elementId, message) {
-    const element = document.getElementById(elementId);
-    if (element) {
-        element.textContent = message;
-        element.classList.remove('d-none');
+// Модифицированная функция показа ошибки
+function showError(element, message) {
+    if (!element) {
+        console.error('Элемент для ошибки не найден:', message);
+        return;
     }
+    element.textContent = message;
+    element.classList.remove('d-none');
+    element.classList.add('show');
+    
+    // Автоматическое скрытие ошибки через 5 секунд
+    setTimeout(() => {
+        element.classList.remove('show');
+        setTimeout(() => element.classList.add('d-none'), 300);
+    }, 5000);
 }
 
 function hideError(elementId) {
