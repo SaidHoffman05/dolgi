@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Семейные Долги</title>
-    <link rel="icon" href="logo.ico" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -14,186 +13,46 @@
             padding-bottom: 2rem;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
         .navbar {
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        
         .card {
             border: none;
             box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
         }
-        
-        .calculator-display {
-            font-size: 1.5rem;
-            text-align: right;
-            min-height: 2.5rem;
-        }
-        
         .admin-only {
             display: none;
         }
-        
         .nav-tabs .nav-link {
             border: none;
             color: #495057;
             padding: 1rem 1.5rem;
             font-weight: 500;
         }
-        
         .nav-tabs .nav-link.active {
             color: #0d6efd;
             border-bottom: 3px solid #0d6efd;
             background: transparent;
         }
-        
         .table th {
             border-top: none;
             font-weight: 500;
         }
-        
         .table td, .table th {
             vertical-align: middle;
         }
-        
-        .modal-content {
-            border-radius: 0.5rem;
+        .action-buttons .btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
         }
-        
-        .btn {
-            border-radius: 0.375rem;
-            padding: 0.5rem 1rem;
-            transition: all 0.2s;
-        }
-        
-        .btn:hover {
-            transform: translateY(-1px);
-        }
-        
-        .calculator-buttons .btn {
-            font-size: 1.1rem;
-            padding: 0.75rem;
-        }
-        
-        #user-menu {
-            display: flex;
-            align-items: center;
-        }
-        
-        #user-info {
-            margin-right: 1rem;
-            font-weight: 500;
-        }
-        
-        .tab-content {
-            padding: 1.5rem 0;
-        }
-        
-        #global-error {
-            max-width: 400px;
-            word-break: break-word;
-        }
-        
-        .table-responsive {
-            overflow-x: auto;
-        }
-        
-        .text-success {
-            color: #198754 !important;
-        }
-        
-        .text-danger {
-            color: #dc3545 !important;
-        }
-        
-        .alert {
-            border-radius: 0.5rem;
-        }
-        
-        .form-control, .form-select {
-            border-radius: 0.375rem;
-            padding: 0.5rem 1rem;
-        }
-        
-        .form-control:focus, .form-select:focus {
-            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-        }
-        
-        .table-hover tbody tr:hover {
-            background-color: rgba(0, 0, 0, 0.03);
-        }
-        
-        #login-form, #app {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .calculator {
-            max-width: 400px;
-            margin: 0 auto;
-        }
-        
-        /* Адаптивные стили */
         @media (max-width: 768px) {
-            body {
-                padding-top: 48px;
-            }
-            
-            .navbar-brand {
-                font-size: 1rem;
-            }
-            
-            .nav-tabs .nav-link {
-                padding: 0.75rem;
-                font-size: 0.9rem;
-            }
-            
-            .calculator-buttons .btn {
-                padding: 0.5rem;
-                font-size: 1rem;
-            }
-            
-            .table-responsive {
-                font-size: 0.85rem;
-            }
-            
-            .btn-mobile {
-                padding: 0.5rem;
-                font-size: 0.9rem;
-            }
-            
-            .form-control {
-                padding: 0.75rem 1rem;
-                font-size: 1rem;
-            }
-            
-            .btn {
-                padding: 0.75rem;
-                font-size: 1rem;
-            }
-            
-            .form-label {
-                font-size: 1rem;
-            }
-            
-            .modal-body {
-                padding: 1.5rem;
-            }
-            
-            .alert {
-                font-size: 0.9rem;
-                padding: 0.75rem;
-            }
-            
-            .action-buttons .btn {
-                padding: 0.25rem 0.5rem;
-                font-size: 0.8rem;
-            }
+            body { padding-top: 48px; }
+            .nav-tabs .nav-link { padding: 0.75rem; }
+            .form-control, .btn { padding: 0.75rem; }
         }
     </style>
 </head>
 <body>
-    <!-- Навигационная панель -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
         <div class="container">
             <a class="navbar-brand" href="#">
@@ -208,10 +67,8 @@
         </div>
     </nav>
 
-    <!-- Основное содержимое -->
     <div class="container mt-4">
-        <!-- Форма входа -->
-        <div id="login-form" class="card shadow mb-4 login-container">
+        <div id="login-form" class="card shadow mb-4">
             <div class="card-body">
                 <h2 class="text-center mb-4"><i class="fas fa-sign-in-alt me-2"></i>Вход в систему</h2>
                 <div id="login-error" class="alert alert-danger d-none"></div>
@@ -229,7 +86,6 @@
             </div>
         </div>
 
-        <!-- Основное приложение -->
         <div id="app" class="d-none">
             <div class="card shadow">
                 <div class="card-header bg-white p-0">
@@ -237,11 +93,6 @@
                         <li class="nav-item">
                             <a class="nav-link active" id="debts-tab" data-bs-toggle="tab" href="#debts-content">
                                 <i class="fas fa-list me-2"></i>Долги
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="calculator-tab" data-bs-toggle="tab" href="#calculator-content">
-                                <i class="fas fa-calculator me-2"></i>Калькулятор
                             </a>
                         </li>
                         <li class="nav-item admin-only">
@@ -252,12 +103,11 @@
                     </ul>
                 </div>
                 
-                <div class="card-body tab-content" id="mainTabsContent">
-                    <!-- Вкладка долгов -->
+                <div class="card-body tab-content">
                     <div class="tab-pane fade show active" id="debts-content">
                         <div class="d-flex justify-content-between mb-3">
                             <h4><i class="fas fa-list me-2"></i>Список долгов</h4>
-                            <button class="btn btn-success admin-only btn-mobile" id="add-debt-btn">
+                            <button class="btn btn-success admin-only" id="add-debt-btn">
                                 <i class="fas fa-plus me-2"></i>Добавить
                             </button>
                         </div>
@@ -268,8 +118,6 @@
                                         <th>Кто должен</th>
                                         <th>Кому должен</th>
                                         <th>Сумма</th>
-                                        <th>Оплачено</th>
-                                        <th>Остаток</th>
                                         <th>Описание</th>
                                         <th>Дата</th>
                                         <th class="admin-only">Действия</th>
@@ -280,50 +128,10 @@
                         </div>
                     </div>
                     
-                    <!-- Вкладка калькулятора -->
-                    <div class="tab-pane fade" id="calculator-content">
-                        <h4 class="mb-4"><i class="fas fa-calculator me-2"></i>Калькулятор выплат</h4>
-                        <div class="calculator">
-                            <div class="calculator-display bg-light p-3 mb-3 rounded" id="calc-display">0</div>
-                            <div class="calculator-buttons">
-                                <div class="row g-2 mb-2">
-                                    <div class="col-3"><button class="btn btn-secondary w-100 btn-mobile" onclick="calcInput('7')">7</button></div>
-                                    <div class="col-3"><button class="btn btn-secondary w-100 btn-mobile" onclick="calcInput('8')">8</button></div>
-                                    <div class="col-3"><button class="btn btn-secondary w-100 btn-mobile" onclick="calcInput('9')">9</button></div>
-                                    <div class="col-3"><button class="btn btn-warning w-100 btn-mobile" onclick="setCalcOperation('/')">/</button></div>
-                                </div>
-                                <div class="row g-2 mb-2">
-                                    <div class="col-3"><button class="btn btn-secondary w-100 btn-mobile" onclick="calcInput('4')">4</button></div>
-                                    <div class="col-3"><button class="btn btn-secondary w-100 btn-mobile" onclick="calcInput('5')">5</button></div>
-                                    <div class="col-3"><button class="btn btn-secondary w-100 btn-mobile" onclick="calcInput('6')">6</button></div>
-                                    <div class="col-3"><button class="btn btn-warning w-100 btn-mobile" onclick="setCalcOperation('*')">×</button></div>
-                                </div>
-                                <div class="row g-2 mb-2">
-                                    <div class="col-3"><button class="btn btn-secondary w-100 btn-mobile" onclick="calcInput('1')">1</button></div>
-                                    <div class="col-3"><button class="btn btn-secondary w-100 btn-mobile" onclick="calcInput('2')">2</button></div>
-                                    <div class="col-3"><button class="btn btn-secondary w-100 btn-mobile" onclick="calcInput('3')">3</button></div>
-                                    <div class="col-3"><button class="btn btn-warning w-100 btn-mobile" onclick="setCalcOperation('-')">-</button></div>
-                                </div>
-                                <div class="row g-2">
-                                    <div class="col-3"><button class="btn btn-secondary w-100 btn-mobile" onclick="calcInput('0')">0</button></div>
-                                    <div class="col-3"><button class="btn btn-secondary w-100 btn-mobile" onclick="calcInput('.')">.</button></div>
-                                    <div class="col-3"><button class="btn btn-danger w-100 btn-mobile" onclick="clearCalc()">C</button></div>
-                                    <div class="col-3"><button class="btn btn-warning w-100 btn-mobile" onclick="setCalcOperation('+')">+</button></div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-12">
-                                        <button class="btn btn-success w-100 btn-mobile" onclick="calculate()">=</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Вкладка пользователей -->
                     <div class="tab-pane fade" id="users-content">
                         <div class="d-flex justify-content-between mb-3">
-                            <h4><i class="fas fa-users me-2"></i>Управление пользователями</h4>
-                            <button class="btn btn-success admin-only btn-mobile" id="add-user-btn">
+                            <h4><i class="fas fa-users me-2"></i>Пользователи</h4>
+                            <button class="btn btn-success admin-only" id="add-user-btn">
                                 <i class="fas fa-plus me-2"></i>Добавить
                             </button>
                         </div>
@@ -333,7 +141,6 @@
                                     <tr>
                                         <th>Логин</th>
                                         <th>Роль</th>
-                                        <th>Дата регистрации</th>
                                         <th>Действия</th>
                                     </tr>
                                 </thead>
@@ -346,7 +153,7 @@
         </div>
     </div>
 
-    <!-- Модальное окно для долгов -->
+    <!-- Модальные окна -->
     <div class="modal fade" id="debtModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -369,10 +176,6 @@
                         <input type="number" step="0.01" class="form-control" id="debt-amount" required>
                     </div>
                     <div class="mb-3">
-                        <label for="debt-paid" class="form-label">Оплачено</label>
-                        <input type="number" step="0.01" class="form-control" id="debt-paid" value="0">
-                    </div>
-                    <div class="mb-3">
                         <label for="debt-description" class="form-label">Описание</label>
                         <textarea class="form-control" id="debt-description" rows="3"></textarea>
                     </div>
@@ -385,7 +188,6 @@
         </div>
     </div>
 
-    <!-- Модальное окно для пользователей -->
     <div class="modal fade" id="userModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -408,7 +210,6 @@
                         <select class="form-select" id="user-role">
                             <option value="user">Пользователь</option>
                             <option value="admin">Администратор</option>
-                            <option value="owner">Владелец</option>
                         </select>
                     </div>
                 </div>
@@ -420,99 +221,47 @@
         </div>
     </div>
 
-    <!-- Глобальное сообщение об ошибке -->
-    <div id="global-error" class="alert alert-danger position-fixed bottom-0 end-0 m-3 d-none" style="z-index: 1000;"></div>
-
-    <!-- Скрипты -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
     // Глобальные переменные
     let currentUser = null;
     let currentDebtId = null;
     let currentUserId = null;
-    let calcValue = '0';
-    let calcCurrentOperation = null;
-    let calcPrevValue = null;
 
+    // Инициализация при загрузке
     document.addEventListener('DOMContentLoaded', () => {
-        // Инициализация базы данных
         initDatabase();
         
-        // Проверка авторизованного пользователя
+        // Проверка авторизации
         const savedUser = localStorage.getItem('currentUser');
         if (savedUser) {
-            try {
-                currentUser = JSON.parse(savedUser);
-                showApp();
-            } catch (e) {
-                console.error('Ошибка парсинга пользователя:', e);
-                localStorage.removeItem('currentUser');
-                showLogin();
-            }
+            currentUser = JSON.parse(savedUser);
+            showApp();
         }
 
-        // Назначение обработчиков событий
-        document.getElementById('login-btn')?.addEventListener('click', handleLogin);
-        document.getElementById('logout-btn')?.addEventListener('click', logout);
-        document.getElementById('add-debt-btn')?.addEventListener('click', showAddDebtModal);
-        document.getElementById('add-user-btn')?.addEventListener('click', showAddUserModal);
-
-        // Автофокус на поле логина
-        const usernameInput = document.getElementById('username');
-        if (usernameInput) {
-            usernameInput.focus();
-        }
+        // Обработчики событий
+        document.getElementById('login-btn').addEventListener('click', handleLogin);
+        document.getElementById('logout-btn').addEventListener('click', logout);
+        document.getElementById('add-debt-btn').addEventListener('click', showAddDebtModal);
+        document.getElementById('add-user-btn').addEventListener('click', showAddUserModal);
+        
+        document.getElementById('username').focus();
     });
 
     function initDatabase() {
-        try {
-            if (!localStorage.getItem('users')) {
-                const defaultUsers = [
-                    { 
-                        id: 1, 
-                        username: 'admin', 
-                        password: 'admin123',
-                        role: 'owner', 
-                        created_at: new Date().toISOString() 
-                    },
-                    { 
-                        id: 2, 
-                        username: '123', 
-                        password: '123',
-                        role: 'user', 
-                        created_at: new Date().toISOString() 
-                    }
-                ];
-                localStorage.setItem('users', JSON.stringify(defaultUsers));
-            }
-            
-            if (!localStorage.getItem('debts')) {
-                localStorage.setItem('debts', JSON.stringify([]));
-            }
-        } catch (e) {
-            console.error('Ошибка инициализации базы данных:', e);
+        if (!localStorage.getItem('users')) {
+            const users = [
+                { id: 1, username: 'admin', password: 'admin123', role: 'admin', created_at: new Date().toISOString() },
+                { id: 2, username: 'user', password: 'user123', role: 'user', created_at: new Date().toISOString() }
+            ];
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+        if (!localStorage.getItem('debts')) {
+            localStorage.setItem('debts', JSON.stringify([]));
         }
     }
 
     function handleLogin() {
-        const loginBtn = document.getElementById('login-btn');
-        try {
-            loginBtn.disabled = true;
-            loginBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> Вход...';
-            
-            setTimeout(() => {
-                login();
-                loginBtn.disabled = false;
-                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i>Войти';
-            }, 300);
-        } catch (e) {
-            console.error('Ошибка входа:', e);
-            loginBtn.disabled = false;
-            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i>Войти';
-        }
-    }
-
-    function login() {
         const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value.trim();
         const errorElement = document.getElementById('login-error');
@@ -522,36 +271,25 @@
             return;
         }
 
-        try {
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            const user = users.find(u => 
-                u.username.toLowerCase() === username.toLowerCase() && 
-                u.password === password
-            );
+        const users = JSON.parse(localStorage.getItem('users'));
+        const user = users.find(u => u.username === username && u.password === password);
 
-            if (user) {
-                currentUser = {
-                    id: user.id,
-                    username: user.username,
-                    role: user.role
-                };
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                showApp();
-            } else {
-                showError(errorElement, 'Неверный логин или пароль');
-                document.getElementById('password').value = '';
-            }
-        } catch (e) {
-            console.error('Ошибка при входе:', e);
-            showError(errorElement, 'Ошибка системы. Попробуйте позже.');
+        if (user) {
+            currentUser = {
+                id: user.id,
+                username: user.username,
+                role: user.role
+            };
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            showApp();
+        } else {
+            showError(errorElement, 'Неверный логин или пароль');
         }
     }
 
     function logout() {
         localStorage.removeItem('currentUser');
         currentUser = null;
-        document.getElementById('username').value = '';
-        document.getElementById('password').value = '';
         showLogin();
     }
 
@@ -566,19 +304,18 @@
     function showLogin() {
         document.getElementById('login-form').classList.remove('d-none');
         document.getElementById('app').classList.add('d-none');
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+        document.getElementById('username').focus();
     }
 
     function updateUIForRole() {
-        if (!currentUser) return;
-
         const userInfoEl = document.getElementById('user-info');
         if (userInfoEl) {
-            userInfoEl.textContent = `${currentUser.username} (${getRoleName(currentUser.role)})`;
+            userInfoEl.textContent = currentUser.username + (currentUser.role === 'admin' ? ' (Админ)' : '');
         }
-
-        const isAdmin = ['admin', 'owner'].includes(currentUser.role.toLowerCase());
         document.querySelectorAll('.admin-only').forEach(el => {
-            el.style.display = isAdmin ? 'block' : 'none';
+            el.style.display = currentUser.role === 'admin' ? 'block' : 'none';
         });
     }
 
@@ -586,10 +323,14 @@
         const debts = JSON.parse(localStorage.getItem('debts')) || [];
         const table = document.getElementById('debts-table');
         
-        table.innerHTML = debts.map(debt => {
-            const isAdmin = currentUser && ['admin', 'owner'].includes(currentUser.role.toLowerCase());
-            const actions = isAdmin ? `
-                <td class="action-buttons">
+        table.innerHTML = debts.map(debt => `
+            <tr>
+                <td>${debt.from_user}</td>
+                <td>${debt.to_user}</td>
+                <td>${debt.amount.toFixed(2)} ₽</td>
+                <td>${debt.description || '-'}</td>
+                <td>${new Date(debt.created_at).toLocaleDateString('ru-RU')}</td>
+                <td class="admin-only action-buttons">
                     <button class="btn btn-sm btn-warning me-2" onclick="editDebt(${debt.id})">
                         <i class="fas fa-edit"></i>
                     </button>
@@ -597,21 +338,8 @@
                         <i class="fas fa-trash"></i>
                     </button>
                 </td>
-            ` : '<td></td>';
-
-            return `
-                <tr>
-                    <td>${debt.from_user}</td>
-                    <td>${debt.to_user}</td>
-                    <td>${debt.amount.toFixed(2)} ₽</td>
-                    <td>${debt.paid.toFixed(2)} ₽</td>
-                    <td>${(debt.amount - debt.paid).toFixed(2)} ₽</td>
-                    <td>${debt.description || '-'}</td>
-                    <td>${new Date(debt.created_at).toLocaleDateString('ru-RU')}</td>
-                    ${actions}
-                </tr>
-            `;
-        }).join('');
+            </tr>
+        `).join('');
     }
 
     function showAddDebtModal() {
@@ -620,27 +348,23 @@
         document.getElementById('debt-from').value = '';
         document.getElementById('debt-to').value = '';
         document.getElementById('debt-amount').value = '';
-        document.getElementById('debt-paid').value = '0';
         document.getElementById('debt-description').value = '';
         hideError('debt-error');
-
         new bootstrap.Modal(document.getElementById('debtModal')).show();
     }
 
     function editDebt(id) {
         const debts = JSON.parse(localStorage.getItem('debts'));
         const debt = debts.find(d => d.id === id);
-
+        
         if (debt) {
             currentDebtId = id;
             document.getElementById('debtModalTitle').textContent = 'Редактировать долг';
             document.getElementById('debt-from').value = debt.from_user;
             document.getElementById('debt-to').value = debt.to_user;
             document.getElementById('debt-amount').value = debt.amount;
-            document.getElementById('debt-paid').value = debt.paid;
             document.getElementById('debt-description').value = debt.description || '';
             hideError('debt-error');
-
             new bootstrap.Modal(document.getElementById('debtModal')).show();
         }
     }
@@ -651,11 +375,8 @@
             from_user: document.getElementById('debt-from').value.trim(),
             to_user: document.getElementById('debt-to').value.trim(),
             amount: parseFloat(document.getElementById('debt-amount').value),
-            paid: parseFloat(document.getElementById('debt-paid').value) || 0,
             description: document.getElementById('debt-description').value.trim(),
-            created_at: currentDebtId ? 
-                JSON.parse(localStorage.getItem('debts')).find(d => d.id === currentDebtId).created_at : 
-                new Date().toISOString()
+            created_at: new Date().toISOString()
         };
 
         if (!debtData.from_user || !debtData.to_user || isNaN(debtData.amount)) {
@@ -664,7 +385,6 @@
         }
 
         let debts = JSON.parse(localStorage.getItem('debts'));
-        
         if (currentDebtId) {
             const index = debts.findIndex(d => d.id === currentDebtId);
             debts[index] = debtData;
@@ -690,22 +410,17 @@
         const users = JSON.parse(localStorage.getItem('users'));
         const table = document.getElementById('users-table');
         
-        if (!table) return;
-        
         table.innerHTML = users.map(user => `
             <tr>
                 <td>${user.username}</td>
-                <td>${getRoleName(user.role)}</td>
-                <td>${new Date(user.created_at).toLocaleDateString('ru-RU')}</td>
-                <td class="action-buttons">
-                    ${currentUser?.role === 'owner' ? `
-                    <button class="btn btn-sm btn-warning me-2" onclick="editUser(${user.id})" ${user.id === 1 ? 'disabled' : ''}>
+                <td>${user.role === 'admin' ? 'Администратор' : 'Пользователь'}</td>
+                <td>
+                    <button class="btn btn-sm btn-warning me-2" onclick="editUser(${user.id})" ${user.id === currentUser.id ? 'disabled' : ''}>
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="btn btn-sm btn-danger" onclick="deleteUser(${user.id})" ${user.id === currentUser?.id ? 'disabled' : ''}>
+                    <button class="btn btn-sm btn-danger" onclick="deleteUser(${user.id})" ${user.id === currentUser.id ? 'disabled' : ''}>
                         <i class="fas fa-trash"></i>
                     </button>
-                    ` : ''}
                 </td>
             </tr>
         `).join('');
@@ -718,18 +433,13 @@
         document.getElementById('user-password').value = '';
         document.getElementById('user-role').value = 'user';
         hideError('user-error');
-
-        if (currentUser?.role !== 'owner') {
-            document.querySelector('#user-role option[value="owner"]').style.display = 'none';
-        }
-
         new bootstrap.Modal(document.getElementById('userModal')).show();
     }
 
     function editUser(id) {
         const users = JSON.parse(localStorage.getItem('users'));
         const user = users.find(u => u.id === id);
-
+        
         if (user) {
             currentUserId = id;
             document.getElementById('userModalTitle').textContent = 'Редактировать пользователя';
@@ -737,11 +447,6 @@
             document.getElementById('user-password').value = '';
             document.getElementById('user-role').value = user.role;
             hideError('user-error');
-
-            if (currentUser?.role !== 'owner') {
-                document.querySelector('#user-role option[value="owner"]').style.display = 'none';
-            }
-
             new bootstrap.Modal(document.getElementById('userModal')).show();
         }
     }
@@ -751,13 +456,8 @@
         const password = document.getElementById('user-password').value;
         const role = document.getElementById('user-role').value;
 
-        if (!username) {
-            showError('user-error', 'Введите логин');
-            return;
-        }
-
-        if (!currentUserId && !password) {
-            showError('user-error', 'Введите пароль');
+        if (!username || !password) {
+            showError('user-error', 'Заполните все поля');
             return;
         }
 
@@ -765,11 +465,9 @@
         const userData = {
             id: currentUserId || Date.now(),
             username,
-            password: password || users.find(u => u.id === currentUserId).password,
+            password,
             role,
-            created_at: currentUserId ? 
-                users.find(u => u.id === currentUserId).created_at : 
-                new Date().toISOString()
+            created_at: new Date().toISOString()
         };
 
         if (currentUserId) {
@@ -782,16 +480,6 @@
         localStorage.setItem('users', JSON.stringify(users));
         bootstrap.Modal.getInstance(document.getElementById('userModal')).hide();
         loadUsers();
-
-        if (currentUserId === currentUser?.id) {
-            currentUser = {
-                id: userData.id,
-                username: userData.username,
-                role: userData.role
-            };
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            updateUIForRole();
-        }
     }
 
     function deleteUser(id) {
@@ -803,78 +491,18 @@
         }
     }
 
-    function getRoleName(role) {
-        const roles = {
-            'owner': 'Владелец',
-            'admin': 'Администратор',
-            'user': 'Пользователь'
-        };
-        return roles[role] || role;
-    }
-
-    function showError(element, message) {
-        if (!element) {
-            console.error('Элемент для ошибки не найден:', message);
-            return;
+    function showError(elementId, message) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.textContent = message;
+            element.classList.remove('d-none');
+            setTimeout(() => element.classList.add('d-none'), 3000);
         }
-        element.textContent = message;
-        element.classList.remove('d-none');
-        element.classList.add('show');
-        
-        setTimeout(() => {
-            element.classList.remove('show');
-            setTimeout(() => element.classList.add('d-none'), 300);
-        }, 5000);
     }
 
     function hideError(elementId) {
         const element = document.getElementById(elementId);
-        if (element) {
-            element.classList.add('d-none');
-        }
-    }
-
-    // Функции калькулятора
-    function calcInput(value) {
-        if (calcValue === '0' && value !== '.') {
-            calcValue = value;
-        } else {
-            calcValue += value;
-        }
-        document.getElementById('calc-display').textContent = calcValue;
-    }
-
-    function setCalcOperation(op) {
-        calcPrevValue = parseFloat(calcValue);
-        calcCurrentOperation = op;
-        calcValue = '0';
-    }
-
-    function clearCalc() {
-        calcValue = '0';
-        calcCurrentOperation = null;
-        calcPrevValue = null;
-        document.getElementById('calc-display').textContent = calcValue;
-    }
-
-    function calculate() {
-        if (!calcCurrentOperation || calcPrevValue === null) return;
-
-        const currentValue = parseFloat(calcValue);
-        let result;
-
-        switch (calcCurrentOperation) {
-            case '+': result = calcPrevValue + currentValue; break;
-            case '-': result = calcPrevValue - currentValue; break;
-            case '*': result = calcPrevValue * currentValue; break;
-            case '/': result = calcPrevValue / currentValue; break;
-            default: return;
-        }
-
-        calcValue = result.toString();
-        document.getElementById('calc-display').textContent = calcValue;
-        calcCurrentOperation = null;
-        calcPrevValue = null;
+        if (element) element.classList.add('d-none');
     }
     </script>
 </body>
