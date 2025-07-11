@@ -7,267 +7,507 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Общие стили для обеих версий */
         :root {
             --mobile-padding: 15px;
         }
         body {
             background-color: #f8f9fa;
-            padding-top: 56px;
-            padding-bottom: 2rem;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        .navbar {
+        
+        /* Стили для десктопной версии (по умолчанию) */
+        .desktop-version {
+            display: block;
+        }
+        .mobile-version {
+            display: none;
+        }
+        
+        /* Стили для мобильной версии */
+        .mobile-version .navbar-brand {
+            font-size: 1rem;
+        }
+        .mobile-version .card {
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+        .mobile-version .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .mobile-version .table th, 
+        .mobile-version .table td {
+            padding: 0.5rem;
+        }
+        .mobile-version .btn {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+        }
+        .mobile-version .action-buttons .btn {
+            padding: 0.2rem 0.4rem;
+            margin: 0 2px;
+        }
+        .mobile-version .nav-tabs .nav-link {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.85rem;
+        }
+        .mobile-version .modal-content {
+            border-radius: 10px;
+        }
+        .mobile-version .form-control, 
+        .mobile-version .form-select {
+            padding: 0.6rem 0.8rem;
+            font-size: 0.9rem;
+        }
+        
+        /* Десктопные стили */
+        .desktop-version body {
+            padding-top: 56px;
+            padding-bottom: 2rem;
+        }
+        .desktop-version .navbar {
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .card {
+        .desktop-version .card {
             border: none;
             box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
             margin-bottom: 1rem;
         }
-        .admin-only {
+        .desktop-version .admin-only {
             display: none;
         }
-        .nav-tabs {
+        .desktop-version .nav-tabs {
             flex-wrap: nowrap;
             overflow-x: auto;
             white-space: nowrap;
         }
-        .nav-tabs .nav-link {
+        .desktop-version .nav-tabs .nav-link {
             border: none;
             color: #495057;
             padding: 1rem 1.25rem;
             font-weight: 500;
             font-size: 0.9rem;
         }
-        .nav-tabs .nav-link.active {
+        .desktop-version .nav-tabs .nav-link.active {
             color: #0d6efd;
             border-bottom: 3px solid #0d6efd;
             background: transparent;
         }
-        .table th {
+        .desktop-version .table th {
             border-top: none;
             font-weight: 500;
             white-space: nowrap;
         }
-        .table td {
+        .desktop-version .table td {
             vertical-align: middle;
         }
-        .action-buttons {
+        .desktop-version .action-buttons {
             white-space: nowrap;
         }
-        .action-buttons .btn {
+        .desktop-version .action-buttons .btn {
             padding: 0.3rem 0.5rem;
             margin: 0 2px;
         }
-        .modal-content {
+        .desktop-version .modal-content {
             border-radius: 0.5rem;
         }
-        .btn-mobile {
+        .desktop-version .btn-mobile {
             padding: 0.5rem 0.75rem;
             font-size: 0.9rem;
         }
-        .form-control, .form-select {
+        .desktop-version .form-control, 
+        .desktop-version .form-select {
             padding: 0.75rem 1rem;
         }
+        
+        /* Медиа-запрос для мобильных устройств */
         @media (max-width: 768px) {
-            body {
+            .desktop-version {
+                display: none !important;
+            }
+            .mobile-version {
+                display: block !important;
+            }
+            
+            /* Дополнительные мобильные стили */
+            .mobile-version body {
+                padding-top: 15px;
+                font-size: 14px;
+            }
+        }
+        
+        /* Десктопные медиа-запросы */
+        @media (min-width: 769px) {
+            .desktop-version {
+                display: block !important;
+            }
+            .mobile-version {
+                display: none !important;
+            }
+            
+            /* Дополнительные десктопные стили */
+            .desktop-version body {
                 padding-top: 56px;
                 padding-bottom: 1rem;
             }
-            .container {
+            .desktop-version .container {
                 padding-left: var(--mobile-padding);
                 padding-right: var(--mobile-padding);
             }
-            .nav-tabs .nav-link {
+            .desktop-version .nav-tabs .nav-link {
                 padding: 0.75rem 0.5rem;
                 font-size: 0.8rem;
             }
-            .table-responsive {
+            .desktop-version .table-responsive {
                 margin-left: calc(-1 * var(--mobile-padding));
                 margin-right: calc(-1 * var(--mobile-padding));
                 width: calc(100% + 2 * var(--mobile-padding));
             }
-            .table {
+            .desktop-version .table {
                 font-size: 0.85rem;
             }
-            .btn {
+            .desktop-version .btn {
                 padding: 0.5rem 0.75rem;
                 font-size: 0.85rem;
             }
-            .modal-body {
+            .desktop-version .modal-body {
                 padding: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+    <!-- Десктопная версия -->
+    <div class="desktop-version">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <i class="fas fa-hand-holding-usd me-2"></i>Семейные Долги
+                </a>
+                <div id="user-menu" class="d-flex align-items-center">
+                    <span class="navbar-text text-white me-2" id="desktop-user-info"></span>
+                    <button class="btn btn-outline-light btn-sm btn-mobile" id="desktop-logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container mt-4">
+            <!-- Форма входа -->
+            <div id="desktop-login-form" class="card shadow">
+                <div class="card-body">
+                    <h2 class="text-center mb-4"><i class="fas fa-sign-in-alt me-2"></i>Вход</h2>
+                    <div id="desktop-login-error" class="alert alert-danger d-none mb-3"></div>
+                    <div class="mb-3">
+                        <label for="desktop-username" class="form-label">Логин</label>
+                        <input type="text" class="form-control" id="desktop-username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="desktop-password" class="form-label">Пароль</label>
+                        <input type="password" class="form-control" id="desktop-password" required>
+                    </div>
+                    <button id="desktop-login-btn" class="btn btn-primary w-100 btn-mobile">
+                        <i class="fas fa-sign-in-alt me-1"></i>Войти
+                    </button>
+                </div>
+            </div>
+
+            <!-- Основное приложение -->
+            <div id="desktop-app" class="d-none">
+                <div class="card shadow">
+                    <div class="card-header bg-white p-0">
+                        <ul class="nav nav-tabs" id="desktop-mainTabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="desktop-debts-tab" data-bs-toggle="tab" href="#desktop-debts-content">
+                                    <i class="fas fa-list me-1"></i><span class="d-none d-md-inline">Долги</span>
+                                </a>
+                            </li>
+                            <li class="nav-item admin-only">
+                                <a class="nav-link" id="desktop-users-tab" data-bs-toggle="tab" href="#desktop-users-content">
+                                    <i class="fas fa-users me-1"></i><span class="d-none d-md-inline">Пользователи</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card-body tab-content p-0">
+                        <!-- Вкладка долгов -->
+                        <div class="tab-pane fade show active" id="desktop-debts-content">
+                            <div class="d-flex justify-content-between align-items-center p-3 pb-0">
+                                <h4 class="mb-0"><i class="fas fa-list me-2"></i>Долги</h4>
+                                <button class="btn btn-success admin-only btn-mobile" id="desktop-add-debt-btn">
+                                    <i class="fas fa-plus"></i><span class="d-none d-md-inline"> Добавить</span>
+                                </button>
+                            </div>
+                            <div class="table-responsive p-3">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Кто должен</th>
+                                            <th>Кому должен</th>
+                                            <th>Сумма</th>
+                                            <th class="d-none d-md-table-cell">Описание</th>
+                                            <th class="d-none d-md-table-cell">Дата</th>
+                                            <th class="admin-only">Действия</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="desktop-debts-table"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Вкладка пользователей -->
+                        <div class="tab-pane fade" id="desktop-users-content">
+                            <div class="d-flex justify-content-between align-items-center p-3 pb-0">
+                                <h4 class="mb-0"><i class="fas fa-users me-2"></i>Пользователи</h4>
+                                <button class="btn btn-success admin-only btn-mobile" id="desktop-add-user-btn">
+                                    <i class="fas fa-plus"></i><span class="d-none d-md-inline"> Добавить</span>
+                                </button>
+                            </div>
+                            <div class="table-responsive p-3">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Логин</th>
+                                            <th>Роль</th>
+                                            <th>Действия</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="desktop-users-table"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальные окна десктопной версии -->
+        <div class="modal fade" id="desktop-debtModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="desktop-debtModalTitle">Добавить долг</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="desktop-debt-error" class="alert alert-danger d-none mb-3"></div>
+                        <div class="mb-3">
+                            <label for="desktop-debt-from" class="form-label">Кто должен</label>
+                            <input type="text" class="form-control" id="desktop-debt-from" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="desktop-debt-to" class="form-label">Кому должен</label>
+                            <input type="text" class="form-control" id="desktop-debt-to" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="desktop-debt-amount" class="form-label">Сумма (₽)</label>
+                            <input type="number" step="0.01" class="form-control" id="desktop-debt-amount" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="desktop-debt-description" class="form-label">Описание</label>
+                            <textarea class="form-control" id="desktop-debt-description" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-mobile" data-bs-dismiss="modal">Отмена</button>
+                        <button type="button" class="btn btn-primary btn-mobile" onclick="saveDebt('desktop')">Сохранить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="desktop-userModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="desktop-userModalTitle">Добавить пользователя</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="desktop-user-error" class="alert alert-danger d-none mb-3"></div>
+                        <div class="mb-3">
+                            <label for="desktop-user-username" class="form-label">Логин</label>
+                            <input type="text" class="form-control" id="desktop-user-username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="desktop-user-password" class="form-label">Пароль</label>
+                            <input type="password" class="form-control" id="desktop-user-password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="desktop-user-role" class="form-label">Роль</label>
+                            <select class="form-select" id="desktop-user-role">
+                                <option value="user">Пользователь</option>
+                                <option value="admin">Администратор</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-mobile" data-bs-dismiss="modal">Отмена</button>
+                        <button type="button" class="btn btn-primary btn-mobile" onclick="saveUser('desktop')">Сохранить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Мобильная версия -->
+    <div class="mobile-version">
         <div class="container">
-            <a class="navbar-brand" href="#">
-                <i class="fas fa-hand-holding-usd me-2"></i>Семейные Долги
-            </a>
-            <div id="user-menu" class="d-flex align-items-center">
-                <span class="navbar-text text-white me-2" id="user-info"></span>
-                <button class="btn btn-outline-light btn-sm btn-mobile" id="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i>
-                </button>
+            <!-- Упрощенная навигация -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">
+                    <i class="fas fa-hand-holding-usd me-2"></i>Семейные Долги
+                </h5>
+                <div id="mobile-user-menu" class="d-flex align-items-center">
+                    <span class="me-2 small" id="mobile-user-info"></span>
+                    <button class="btn btn-sm btn-outline-danger" id="mobile-logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
             </div>
-        </div>
-    </nav>
 
-    <div class="container mt-4">
-        <!-- Форма входа -->
-        <div id="login-form" class="card shadow">
-            <div class="card-body">
-                <h2 class="text-center mb-4"><i class="fas fa-sign-in-alt me-2"></i>Вход</h2>
-                <div id="login-error" class="alert alert-danger d-none mb-3"></div>
-                <div class="mb-3">
-                    <label for="username" class="form-label">Логин</label>
-                    <input type="text" class="form-control" id="username" required>
+            <!-- Основной контент -->
+            <div id="mobile-login-form">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="text-center mb-3"><i class="fas fa-sign-in-alt me-2"></i>Вход</h5>
+                        <div id="mobile-login-error" class="alert alert-danger d-none mb-2 p-2 small"></div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control form-control-sm" id="mobile-username" placeholder="Логин" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="password" class="form-control form-control-sm" id="mobile-password" placeholder="Пароль" required>
+                        </div>
+                        <button id="mobile-login-btn" class="btn btn-primary btn-sm w-100">
+                            <i class="fas fa-sign-in-alt me-1"></i>Войти
+                        </button>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Пароль</label>
-                    <input type="password" class="form-control" id="password" required>
-                </div>
-                <button id="login-btn" class="btn btn-primary w-100 btn-mobile">
-                    <i class="fas fa-sign-in-alt me-1"></i>Войти
-                </button>
             </div>
-        </div>
 
-        <!-- Основное приложение -->
-        <div id="app" class="d-none">
-            <div class="card shadow">
-                <div class="card-header bg-white p-0">
-                    <ul class="nav nav-tabs" id="mainTabs">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="debts-tab" data-bs-toggle="tab" href="#debts-content">
-                                <i class="fas fa-list me-1"></i><span class="d-none d-md-inline">Долги</span>
-                            </a>
-                        </li>
-                        <li class="nav-item admin-only">
-                            <a class="nav-link" id="users-tab" data-bs-toggle="tab" href="#users-content">
-                                <i class="fas fa-users me-1"></i><span class="d-none d-md-inline">Пользователи</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="card-body tab-content p-0">
-                    <!-- Вкладка долгов -->
-                    <div class="tab-pane fade show active" id="debts-content">
-                        <div class="d-flex justify-content-between align-items-center p-3 pb-0">
-                            <h4 class="mb-0"><i class="fas fa-list me-2"></i>Долги</h4>
-                            <button class="btn btn-success admin-only btn-mobile" id="add-debt-btn">
-                                <i class="fas fa-plus"></i><span class="d-none d-md-inline"> Добавить</span>
+            <div id="mobile-app" class="d-none">
+                <!-- Упрощенные вкладки -->
+                <ul class="nav nav-tabs nav-justified mb-2">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="mobile-debts-tab" data-bs-toggle="tab" href="#mobile-debts-content">
+                            <i class="fas fa-list"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item admin-only">
+                        <a class="nav-link" id="mobile-users-tab" data-bs-toggle="tab" href="#mobile-users-content">
+                            <i class="fas fa-users"></i>
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Контент вкладок -->
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="mobile-debts-content">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="mb-0"><i class="fas fa-list me-1"></i>Долги</h6>
+                            <button class="btn btn-success btn-sm admin-only" id="mobile-add-debt-btn">
+                                <i class="fas fa-plus"></i>
                             </button>
                         </div>
-                        <div class="table-responsive p-3">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead class="small">
                                     <tr>
-                                        <th>Кто должен</th>
-                                        <th>Кому должен</th>
+                                        <th>От кого</th>
+                                        <th>Кому</th>
                                         <th>Сумма</th>
-                                        <th class="d-none d-md-table-cell">Описание</th>
-                                        <th class="d-none d-md-table-cell">Дата</th>
-                                        <th class="admin-only">Действия</th>
+                                        <th class="admin-only"></th>
                                     </tr>
                                 </thead>
-                                <tbody id="debts-table"></tbody>
+                                <tbody id="mobile-debts-table"></tbody>
                             </table>
                         </div>
                     </div>
-                    
-                    <!-- Вкладка пользователей -->
-                    <div class="tab-pane fade" id="users-content">
-                        <div class="d-flex justify-content-between align-items-center p-3 pb-0">
-                            <h4 class="mb-0"><i class="fas fa-users me-2"></i>Пользователи</h4>
-                            <button class="btn btn-success admin-only btn-mobile" id="add-user-btn">
-                                <i class="fas fa-plus"></i><span class="d-none d-md-inline"> Добавить</span>
+
+                    <div class="tab-pane fade" id="mobile-users-content">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="mb-0"><i class="fas fa-users me-1"></i>Пользователи</h6>
+                            <button class="btn btn-success btn-sm admin-only" id="mobile-add-user-btn">
+                                <i class="fas fa-plus"></i>
                             </button>
                         </div>
-                        <div class="table-responsive p-3">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead class="small">
                                     <tr>
                                         <th>Логин</th>
                                         <th>Роль</th>
-                                        <th>Действия</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
-                                <tbody id="users-table"></tbody>
+                                <tbody id="mobile-users-table"></tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Модальные окна -->
-    <div class="modal fade" id="debtModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="debtModalTitle">Добавить долг</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="debt-error" class="alert alert-danger d-none mb-3"></div>
-                    <div class="mb-3">
-                        <label for="debt-from" class="form-label">Кто должен</label>
-                        <input type="text" class="form-control" id="debt-from" required>
+        <!-- Упрощенные модальные окна -->
+        <div class="modal fade" id="mobile-debtModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="mobile-debtModalTitle">Долг</h6>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
-                    <div class="mb-3">
-                        <label for="debt-to" class="form-label">Кому должен</label>
-                        <input type="text" class="form-control" id="debt-to" required>
+                    <div class="modal-body">
+                        <div id="mobile-debt-error" class="alert alert-danger d-none mb-2 p-2 small"></div>
+                        <div class="mb-2">
+                            <input type="text" class="form-control form-control-sm" id="mobile-debt-from" placeholder="Кто должен" required>
+                        </div>
+                        <div class="mb-2">
+                            <input type="text" class="form-control form-control-sm" id="mobile-debt-to" placeholder="Кому должен" required>
+                        </div>
+                        <div class="mb-2">
+                            <input type="number" step="0.01" class="form-control form-control-sm" id="mobile-debt-amount" placeholder="Сумма" required>
+                        </div>
+                        <div class="mb-2">
+                            <textarea class="form-control form-control-sm" id="mobile-debt-description" rows="2" placeholder="Описание"></textarea>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="debt-amount" class="form-label">Сумма (₽)</label>
-                        <input type="number" step="0.01" class="form-control" id="debt-amount" required>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Отмена</button>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="saveDebt('mobile')">Сохранить</button>
                     </div>
-                    <div class="mb-3">
-                        <label for="debt-description" class="form-label">Описание</label>
-                        <textarea class="form-control" id="debt-description" rows="2"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-mobile" data-bs-dismiss="modal">Отмена</button>
-                    <button type="button" class="btn btn-primary btn-mobile" onclick="saveDebt()">Сохранить</button>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="modal fade" id="userModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="userModalTitle">Добавить пользователя</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="user-error" class="alert alert-danger d-none mb-3"></div>
-                    <div class="mb-3">
-                        <label for="user-username" class="form-label">Логин</label>
-                        <input type="text" class="form-control" id="user-username" required>
+        <div class="modal fade" id="mobile-userModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="mobile-userModalTitle">Пользователь</h6>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
-                    <div class="mb-3">
-                        <label for="user-password" class="form-label">Пароль</label>
-                        <input type="password" class="form-control" id="user-password" required>
+                    <div class="modal-body">
+                        <div id="mobile-user-error" class="alert alert-danger d-none mb-2 p-2 small"></div>
+                        <div class="mb-2">
+                            <input type="text" class="form-control form-control-sm" id="mobile-user-username" placeholder="Логин" required>
+                        </div>
+                        <div class="mb-2">
+                            <input type="password" class="form-control form-control-sm" id="mobile-user-password" placeholder="Пароль" required>
+                        </div>
+                        <div class="mb-2">
+                            <select class="form-select form-select-sm" id="mobile-user-role">
+                                <option value="user">Пользователь</option>
+                                <option value="admin">Администратор</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="user-role" class="form-label">Роль</label>
-                        <select class="form-select" id="user-role">
-                            <option value="user">Пользователь</option>
-                            <option value="admin">Администратор</option>
-                        </select>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Отмена</button>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="saveUser('mobile')">Сохранить</button>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-mobile" data-bs-dismiss="modal">Отмена</button>
-                    <button type="button" class="btn btn-primary btn-mobile" onclick="saveUser()">Сохранить</button>
                 </div>
             </div>
         </div>
@@ -279,11 +519,22 @@
     let currentUser = null;
     let currentDebtId = null;
     let currentUserId = null;
-
+    
+    // Определение мобильного устройства
+    function isMobileDevice() {
+        return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+    }
+    
     // Инициализация при загрузке
     document.addEventListener('DOMContentLoaded', function() {
-        // Принудительная очистка localStorage для тестирования (можно удалить)
-        // localStorage.clear();
+        // Показываем соответствующую версию
+        if (isMobileDevice()) {
+            document.querySelector('.mobile-version').style.display = 'block';
+            document.querySelector('.desktop-version').style.display = 'none';
+        } else {
+            document.querySelector('.mobile-version').style.display = 'none';
+            document.querySelector('.desktop-version').style.display = 'block';
+        }
         
         initDatabase();
         
@@ -302,11 +553,15 @@
             showLogin();
         }
 
-        // Обработчики событий
-        document.getElementById('login-btn').addEventListener('click', handleLogin);
-        document.getElementById('logout-btn').addEventListener('click', logout);
-        document.getElementById('add-debt-btn').addEventListener('click', showAddDebtModal);
-        document.getElementById('add-user-btn').addEventListener('click', showAddUserModal);
+        // Обработчики событий для обеих версий
+        document.getElementById('desktop-login-btn').addEventListener('click', () => handleLogin('desktop'));
+        document.getElementById('mobile-login-btn').addEventListener('click', () => handleLogin('mobile'));
+        document.getElementById('desktop-logout-btn').addEventListener('click', logout);
+        document.getElementById('mobile-logout-btn').addEventListener('click', logout);
+        document.getElementById('desktop-add-debt-btn').addEventListener('click', () => showAddDebtModal('desktop'));
+        document.getElementById('mobile-add-debt-btn').addEventListener('click', () => showAddDebtModal('mobile'));
+        document.getElementById('desktop-add-user-btn').addEventListener('click', () => showAddUserModal('desktop'));
+        document.getElementById('mobile-add-user-btn').addEventListener('click', () => showAddUserModal('mobile'));
     });
 
     function initDatabase() {
@@ -336,10 +591,11 @@
         }
     }
 
-    function handleLogin() {
-        const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value.trim();
-        const errorElement = document.getElementById('login-error');
+    function handleLogin(version) {
+        const prefix = version === 'mobile' ? 'mobile-' : 'desktop-';
+        const username = document.getElementById(prefix + 'username').value.trim();
+        const password = document.getElementById(prefix + 'password').value.trim();
+        const errorElement = document.getElementById(prefix + 'login-error');
 
         if (!username || !password) {
             showError(errorElement, 'Заполните все поля');
@@ -364,8 +620,8 @@
             } else {
                 console.log("Ошибка входа. Введенные данные:", {username, password});
                 showError(errorElement, 'Неверный логин или пароль');
-                document.getElementById('password').value = '';
-                document.getElementById('username').focus();
+                document.getElementById(prefix + 'password').value = '';
+                document.getElementById(prefix + 'username').focus();
             }
         } catch (e) {
             console.error("Ошибка при входе:", e);
@@ -380,23 +636,32 @@
     }
 
     function showApp() {
-        document.getElementById('login-form').classList.add('d-none');
-        document.getElementById('app').classList.remove('d-none');
+        const isMobile = isMobileDevice();
+        const prefix = isMobile ? 'mobile-' : 'desktop-';
+        
+        document.getElementById(prefix + 'login-form').classList.add('d-none');
+        document.getElementById(prefix + 'app').classList.remove('d-none');
         updateUIForRole();
         loadDebts();
         loadUsers();
     }
 
     function showLogin() {
-        document.getElementById('login-form').classList.remove('d-none');
-        document.getElementById('app').classList.add('d-none');
-        document.getElementById('username').value = '';
-        document.getElementById('password').value = '';
-        document.getElementById('username').focus();
+        const isMobile = isMobileDevice();
+        const prefix = isMobile ? 'mobile-' : 'desktop-';
+        
+        document.getElementById(prefix + 'login-form').classList.remove('d-none');
+        document.getElementById(prefix + 'app').classList.add('d-none');
+        document.getElementById(prefix + 'username').value = '';
+        document.getElementById(prefix + 'password').value = '';
+        document.getElementById(prefix + 'username').focus();
     }
 
     function updateUIForRole() {
-        const userInfoEl = document.getElementById('user-info');
+        const isMobile = isMobileDevice();
+        const prefix = isMobile ? 'mobile-' : 'desktop-';
+        const userInfoEl = document.getElementById(prefix + 'user-info');
+        
         if (userInfoEl) {
             userInfoEl.textContent = currentUser.username + 
                 (currentUser.role === 'admin' ? ' (Админ)' : '');
@@ -410,77 +675,92 @@
     }
 
     function loadDebts() {
+        const isMobile = isMobileDevice();
+        const prefix = isMobile ? 'mobile-' : 'desktop-';
         const debts = JSON.parse(localStorage.getItem('debts')) || [];
-        const table = document.getElementById('debts-table');
+        const table = document.getElementById(prefix + 'debts-table');
         
         table.innerHTML = debts.map(debt => {
             const actions = currentUser.role === 'admin' ? `
                 <td class="action-buttons">
-                    <button class="btn btn-sm btn-warning" onclick="editDebt(${debt.id})">
+                    <button class="btn btn-sm btn-warning" onclick="editDebt(${debt.id}, '${prefix}')">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="btn btn-sm btn-danger" onclick="deleteDebt(${debt.id})">
+                    <button class="btn btn-sm btn-danger" onclick="deleteDebt(${debt.id}, '${prefix}')">
                         <i class="fas fa-trash"></i>
                     </button>
                 </td>
             ` : '<td></td>';
             
-            return `
-                <tr>
-                    <td>${debt.from_user}</td>
-                    <td>${debt.to_user}</td>
-                    <td>${debt.amount.toFixed(2)} ₽</td>
-                    <td class="d-none d-md-table-cell">${debt.description || '-'}</td>
-                    <td class="d-none d-md-table-cell">${formatDate(debt.created_at)}</td>
-                    ${actions}
-                </tr>
-            `;
+            if (isMobile) {
+                return `
+                    <tr>
+                        <td>${debt.from_user}</td>
+                        <td>${debt.to_user}</td>
+                        <td>${debt.amount.toFixed(2)} ₽</td>
+                        ${actions}
+                    </tr>
+                `;
+            } else {
+                return `
+                    <tr>
+                        <td>${debt.from_user}</td>
+                        <td>${debt.to_user}</td>
+                        <td>${debt.amount.toFixed(2)} ₽</td>
+                        <td class="d-none d-md-table-cell">${debt.description || '-'}</td>
+                        <td class="d-none d-md-table-cell">${formatDate(debt.created_at)}</td>
+                        ${actions}
+                    </tr>
+                `;
+            }
         }).join('');
     }
 
-    function showAddDebtModal() {
+    function showAddDebtModal(version) {
+        const prefix = version === 'mobile' ? 'mobile-' : 'desktop-';
         currentDebtId = null;
-        document.getElementById('debtModalTitle').textContent = 'Добавить долг';
-        document.getElementById('debt-from').value = '';
-        document.getElementById('debt-to').value = '';
-        document.getElementById('debt-amount').value = '';
-        document.getElementById('debt-description').value = '';
-        hideError('debt-error');
+        document.getElementById(prefix + 'debtModalTitle').textContent = 'Добавить долг';
+        document.getElementById(prefix + 'debt-from').value = '';
+        document.getElementById(prefix + 'debt-to').value = '';
+        document.getElementById(prefix + 'debt-amount').value = '';
+        document.getElementById(prefix + 'debt-description').value = '';
+        hideError(prefix + 'debt-error');
         
-        const modal = new bootstrap.Modal(document.getElementById('debtModal'));
+        const modal = new bootstrap.Modal(document.getElementById(prefix + 'debtModal'));
         modal.show();
     }
 
-    function editDebt(id) {
+    function editDebt(id, prefix) {
         const debts = JSON.parse(localStorage.getItem('debts'));
         const debt = debts.find(d => d.id === id);
         
         if (debt) {
             currentDebtId = id;
-            document.getElementById('debtModalTitle').textContent = 'Редактировать долг';
-            document.getElementById('debt-from').value = debt.from_user;
-            document.getElementById('debt-to').value = debt.to_user;
-            document.getElementById('debt-amount').value = debt.amount;
-            document.getElementById('debt-description').value = debt.description || '';
-            hideError('debt-error');
+            document.getElementById(prefix + 'debtModalTitle').textContent = 'Редактировать долг';
+            document.getElementById(prefix + 'debt-from').value = debt.from_user;
+            document.getElementById(prefix + 'debt-to').value = debt.to_user;
+            document.getElementById(prefix + 'debt-amount').value = debt.amount;
+            document.getElementById(prefix + 'debt-description').value = debt.description || '';
+            hideError(prefix + 'debt-error');
             
-            const modal = new bootstrap.Modal(document.getElementById('debtModal'));
+            const modal = new bootstrap.Modal(document.getElementById(prefix + 'debtModal'));
             modal.show();
         }
     }
 
-    function saveDebt() {
+    function saveDebt(version) {
+        const prefix = version === 'mobile' ? 'mobile-' : 'desktop-';
         const debtData = {
             id: currentDebtId || Date.now(),
-            from_user: document.getElementById('debt-from').value.trim(),
-            to_user: document.getElementById('debt-to').value.trim(),
-            amount: parseFloat(document.getElementById('debt-amount').value),
-            description: document.getElementById('debt-description').value.trim(),
+            from_user: document.getElementById(prefix + 'debt-from').value.trim(),
+            to_user: document.getElementById(prefix + 'debt-to').value.trim(),
+            amount: parseFloat(document.getElementById(prefix + 'debt-amount').value),
+            description: document.getElementById(prefix + 'debt-description').value.trim(),
             created_at: new Date().toISOString()
         };
 
         if (!debtData.from_user || !debtData.to_user || isNaN(debtData.amount)) {
-            showError('debt-error', 'Заполните все обязательные поля');
+            showError(prefix + 'debt-error', 'Заполните все обязательные поля');
             return;
         }
 
@@ -494,11 +774,11 @@
         }
 
         localStorage.setItem('debts', JSON.stringify(debts));
-        bootstrap.Modal.getInstance(document.getElementById('debtModal')).hide();
+        bootstrap.Modal.getInstance(document.getElementById(prefix + 'debtModal')).hide();
         loadDebts();
     }
 
-    function deleteDebt(id) {
+    function deleteDebt(id, prefix) {
         if (confirm('Вы уверены, что хотите удалить этот долг?')) {
             let debts = JSON.parse(localStorage.getItem('debts'));
             debts = debts.filter(d => d.id !== id);
@@ -508,8 +788,10 @@
     }
 
     function loadUsers() {
+        const isMobile = isMobileDevice();
+        const prefix = isMobile ? 'mobile-' : 'desktop-';
         const users = JSON.parse(localStorage.getItem('users'));
-        const table = document.getElementById('users-table');
+        const table = document.getElementById(prefix + 'users-table');
         
         if (!table) return;
         
@@ -523,10 +805,10 @@
                     <td>${user.role === 'admin' ? 'Администратор' : 'Пользователь'}</td>
                     <td class="action-buttons">
                         ${currentUser.role === 'admin' ? `
-                        <button class="btn btn-sm btn-warning" onclick="editUser(${user.id})" ${!canEdit ? 'disabled' : ''}>
+                        <button class="btn btn-sm btn-warning" onclick="editUser(${user.id}, '${prefix}')" ${!canEdit ? 'disabled' : ''}>
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteUser(${user.id})" ${isCurrentUser ? 'disabled' : ''}>
+                        <button class="btn btn-sm btn-danger" onclick="deleteUser(${user.id}, '${prefix}')" ${isCurrentUser ? 'disabled' : ''}>
                             <i class="fas fa-trash"></i>
                         </button>
                         ` : ''}
@@ -536,42 +818,44 @@
         }).join('');
     }
 
-    function showAddUserModal() {
+    function showAddUserModal(version) {
+        const prefix = version === 'mobile' ? 'mobile-' : 'desktop-';
         currentUserId = null;
-        document.getElementById('userModalTitle').textContent = 'Добавить пользователя';
-        document.getElementById('user-username').value = '';
-        document.getElementById('user-password').value = '';
-        document.getElementById('user-role').value = 'user';
-        hideError('user-error');
+        document.getElementById(prefix + 'userModalTitle').textContent = 'Добавить пользователя';
+        document.getElementById(prefix + 'user-username').value = '';
+        document.getElementById(prefix + 'user-password').value = '';
+        document.getElementById(prefix + 'user-role').value = 'user';
+        hideError(prefix + 'user-error');
         
-        const modal = new bootstrap.Modal(document.getElementById('userModal'));
+        const modal = new bootstrap.Modal(document.getElementById(prefix + 'userModal'));
         modal.show();
     }
 
-    function editUser(id) {
+    function editUser(id, prefix) {
         const users = JSON.parse(localStorage.getItem('users'));
         const user = users.find(u => u.id === id);
         
         if (user) {
             currentUserId = id;
-            document.getElementById('userModalTitle').textContent = 'Редактировать пользователя';
-            document.getElementById('user-username').value = user.username;
-            document.getElementById('user-password').value = '';
-            document.getElementById('user-role').value = user.role;
-            hideError('user-error');
+            document.getElementById(prefix + 'userModalTitle').textContent = 'Редактировать пользователя';
+            document.getElementById(prefix + 'user-username').value = user.username;
+            document.getElementById(prefix + 'user-password').value = '';
+            document.getElementById(prefix + 'user-role').value = user.role;
+            hideError(prefix + 'user-error');
             
-            const modal = new bootstrap.Modal(document.getElementById('userModal'));
+            const modal = new bootstrap.Modal(document.getElementById(prefix + 'userModal'));
             modal.show();
         }
     }
 
-    function saveUser() {
-        const username = document.getElementById('user-username').value.trim();
-        const password = document.getElementById('user-password').value;
-        const role = document.getElementById('user-role').value;
+    function saveUser(version) {
+        const prefix = version === 'mobile' ? 'mobile-' : 'desktop-';
+        const username = document.getElementById(prefix + 'user-username').value.trim();
+        const password = document.getElementById(prefix + 'user-password').value;
+        const role = document.getElementById(prefix + 'user-role').value;
 
         if (!username || !password) {
-            showError('user-error', 'Заполните все поля');
+            showError(prefix + 'user-error', 'Заполните все поля');
             return;
         }
 
@@ -590,14 +874,14 @@
         } else {
             // Проверка на существующего пользователя
             if (users.some(u => u.username === username)) {
-                showError('user-error', 'Пользователь с таким логином уже существует');
+                showError(prefix + 'user-error', 'Пользователь с таким логином уже существует');
                 return;
             }
             users.push(userData);
         }
 
         localStorage.setItem('users', JSON.stringify(users));
-        bootstrap.Modal.getInstance(document.getElementById('userModal')).hide();
+        bootstrap.Modal.getInstance(document.getElementById(prefix + 'userModal')).hide();
         loadUsers();
         
         // Если редактировали текущего пользователя - обновляем данные
@@ -609,7 +893,7 @@
         }
     }
 
-    function deleteUser(id) {
+    function deleteUser(id, prefix) {
         if (confirm('Вы уверены, что хотите удалить этого пользователя?')) {
             let users = JSON.parse(localStorage.getItem('users'));
             users = users.filter(u => u.id !== id);
