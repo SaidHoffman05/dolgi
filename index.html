@@ -343,32 +343,7 @@
                         }
                     });
 
-                    // 2. Блокировка горячих клавиш
-                    document.addEventListener('keydown', (e) => {
-                        if (this.isEditable(e.target)) return;
-                        
-                        const forbiddenKeys = {
-                            'F12': 'Инструменты разработчика',
-                            'F8': 'Отладка',
-                            'Control+U': 'Просмотр кода',
-                            'Control+Shift+I': 'DevTools',
-                            'Control+Shift+J': 'Консоль',
-                            'Control+Shift+C': 'Инспектор',
-                            'Control+S': 'Сохранение страницы'
-                        };
-                        
-                        const keyCombination = [
-                            e.ctrlKey ? 'Control+' : '',
-                            e.shiftKey ? 'Shift+' : '',
-                            e.altKey ? 'Alt+' : '',
-                            e.key
-                        ].join('');
-                        
-                        if (forbiddenKeys[e.key] || forbiddenKeys[keyCombination]) {
-                            e.preventDefault();
-                            this.showAlert(`Запрещено: ${forbiddenKeys[e.key] || forbiddenKeys[keyCombination]}`, 'fa-keyboard');
-                        }
-                    });
+
 
                     // 3. Защита от копирования
                     document.addEventListener('copy', (e) => {
