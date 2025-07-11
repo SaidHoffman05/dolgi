@@ -63,7 +63,6 @@
     </style>
 </head>
 <body>
-    <!-- Система защиты -->
     <script>
     // ===== УСИЛЕННАЯ СИСТЕМА ЗАЩИТЫ ===== //
     (function() {
@@ -76,7 +75,8 @@
             showAlert(message, icon = 'fa-lock') {
                 if (this.triggered) return;
                 
-                this.triggered = true;
+                // Создаем локальную копию вместо изменения frozen объекта
+                const alertTriggered = true;
                 const alert = document.createElement('div');
                 alert.className = 'protection-alert';
                 alert.innerHTML = `
@@ -91,7 +91,7 @@
                     alert.classList.add('fade-out');
                     setTimeout(() => {
                         alert.remove();
-                        this.triggered = false;
+                        // Не изменяем this.triggered напрямую
                     }, 300);
                 }, 3000);
             },
@@ -99,14 +99,15 @@
             isEditable(element) {
                 const editableTags = ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'];
                 return element.isContentEditable || 
-                       editableTags.includes(element.tagName) ||
-                       element.classList.contains('allow-action');
+                    editableTags.includes(element.tagName) ||
+                    element.classList.contains('allow-action');
             },
             
             blockDevTools() {
                 if (this.devToolsOpened) return;
                 
-                this.devToolsOpened = true;
+                // Используем локальную переменную вместо изменения свойства
+                const devToolsDetected = true;
                 const blocker = document.createElement('div');
                 blocker.className = 'devtools-block';
                 blocker.innerHTML = `
@@ -120,7 +121,6 @@
                 document.body.innerHTML = '';
                 document.body.appendChild(blocker);
                 
-                // Дополнительные меры
                 document.body.style.overflow = 'hidden';
                 window.addEventListener('keydown', (e) => {
                     e.preventDefault();
@@ -200,9 +200,6 @@
                 };
                 
                 setInterval(detectDevTools, 1000);
-                
-                // 7. Защита от переопределения
-                Object.freeze(this);
             }
         };
         
