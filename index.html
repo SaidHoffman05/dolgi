@@ -132,8 +132,68 @@
             max-width: 400px;
             margin: 0 auto;
         }
-
-        /* Мобильные стили */
+        
+        /* Стили для системы защиты */
+        .protection-alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 99999;
+            animation: protectionFadeIn 0.3s;
+            max-width: 350px;
+        }
+        
+        .protection-alert-content {
+            padding: 12px 16px;
+            background: #ff4444;
+            color: white;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+        
+        .protection-alert i {
+            margin-right: 8px;
+        }
+        
+        .fade-out {
+            animation: protectionFadeOut 0.3s forwards;
+        }
+        
+        @keyframes protectionFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes protectionFadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-20px); }
+        }
+        
+        /* Стили для блокировки DevTools */
+        .devtools-block {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 999999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .devtools-block-content {
+            max-width: 500px;
+            padding: 30px;
+        }
+        
+        /* Адаптивные стили */
         @media (max-width: 768px) {
             body {
                 padding-top: 48px;
@@ -167,49 +227,193 @@
                 padding: 0.5rem;
                 font-size: 0.9rem;
             }
-
-            /* Улучшение формы входа для мобильных */
-            #login-form {
-                padding: 15px;
-                margin: 15px;
+        }
+        @media (max-width: 768px) {
+            /* Добавьте эти стили */
+            .form-control {
+                padding: 0.75rem 1rem;
+                font-size: 1rem;
             }
-
-            #login-form .form-control {
-                font-size: 16px; /* Увеличиваем размер шрифта для удобства */
-                padding: 12px;
+            
+            .btn {
+                padding: 0.75rem;
+                font-size: 1rem;
             }
-
-            #login-btn {
-                padding: 12px;
-                font-size: 16px;
+            
+            .form-label {
+                font-size: 1rem;
             }
-
-            /* Улучшение таблиц для мобильных */
-            .table td, .table th {
-                padding: 0.5rem;
-            }
-
-            /* Уменьшаем отступы в модальных окнах */
+            
             .modal-body {
-                padding: 1rem;
+                padding: 1.5rem;
             }
-        }
-
-        /* Стили для кнопок действий */
-        .action-buttons {
-            white-space: nowrap;
-        }
-
-        /* Улучшение для мобильных устройств */
-        @media (max-width: 576px) {
+            
+            /* Увеличиваем размер текста в ошибках */
+            .alert {
+                font-size: 0.9rem;
+                padding: 0.75rem;
+            }
+            
+            /* Улучшаем отображение таблиц */
+            .table-responsive {
+                font-size: 0.85rem;
+            }
+            
+            /* Улучшаем отображение кнопок действий */
             .action-buttons .btn {
-                padding: 0.3rem;
-                margin: 0.1rem;
+                padding: 0.25rem 0.5rem;
+                font-size: 0.8rem;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Система защиты -->
+    <script>
+    // ===== УСИЛЕННАЯ СИСТЕМА ЗАЩИТЫ ===== //
+    (function() {
+        'use strict';
+        
+        const protection = (function() {
+            let triggered = false;
+            let devToolsOpened = false;
+            let activeAlerts = 0;
+            
+            return {
+                showAlert(message, icon = 'fa-lock') {
+                    if (triggered || activeAlerts > 2) return;
+                    activeAlerts++;
+                    
+                    const alert = document.createElement('div');
+                    alert.className = 'protection-alert';
+                    alert.innerHTML = `
+                        <div class="protection-alert-content">
+                            <i class="fas ${icon}"></i>
+                            <span>${message}</span>
+                        </div>
+                    `;
+                    document.body.appendChild(alert);
+                    
+                    setTimeout(() => {
+                        alert.classList.add('fade-out');
+                        setTimeout(() => {
+                            alert.remove();
+                            activeAlerts--;
+                        }, 300);
+                    }, 3000);
+                },
+                
+                isEditable(element) {
+                    const editableTags = ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'];
+                    return element.isContentEditable || 
+                        editableTags.includes(element.tagName) ||
+                        element.classList.contains('allow-action');
+                },
+                
+                blockDevTools() {
+                    if (devToolsOpened || document.querySelector('.devtools-block')) return;
+                    devToolsOpened = true;
+                    
+                    const blocker = document.createElement('div');
+                    blocker.className = 'devtools-block';
+                    blocker.innerHTML = `
+                        <div class="devtools-block-content">
+                            <i class="fas fa-ban text-danger" style="font-size: 3rem;"></i>
+                            <h2 class="mt-3">Доступ запрещен</h2>
+                            <p class="mt-3">Обнаружены инструменты разработчика</p>
+                            <p>Для продолжения работы закройте DevTools и обновите страницу</p>
+                        </div>
+                    `;
+                    document.body.innerHTML = '';
+                    document.body.appendChild(blocker);
+                    
+                    document.body.style.overflow = 'hidden';
+                    window.addEventListener('keydown', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    });
+                },
+                
+                init() {
+                    // 1. Блокировка контекстного меню
+                    document.addEventListener('contextmenu', (e) => {
+                        if (!this.isEditable(e.target)) {
+                            e.preventDefault();
+                            this.showAlert('Контекстное меню отключено', 'fa-mouse-pointer');
+                        }
+                    });
+
+                    // 2. Блокировка горячих клавиш
+                    document.addEventListener('keydown', (e) => {
+                        if (this.isEditable(e.target)) return;
+                        
+                        const forbiddenKeys = {
+                            'F12': 'Инструменты разработчика',
+                            'F8': 'Отладка',
+                            'Control+U': 'Просмотр кода',
+                            'Control+Shift+I': 'DevTools',
+                            'Control+Shift+J': 'Консоль',
+                            'Control+Shift+C': 'Инспектор',
+                            'Control+S': 'Сохранение страницы'
+                        };
+                        
+                        const keyCombination = [
+                            e.ctrlKey ? 'Control+' : '',
+                            e.shiftKey ? 'Shift+' : '',
+                            e.altKey ? 'Alt+' : '',
+                            e.key
+                        ].join('');
+                        
+                        if (forbiddenKeys[e.key] || forbiddenKeys[keyCombination]) {
+                            e.preventDefault();
+                            this.showAlert(`Запрещено: ${forbiddenKeys[e.key] || forbiddenKeys[keyCombination]}`, 'fa-keyboard');
+                        }
+                    });
+
+                    // 3. Защита от копирования
+                    document.addEventListener('copy', (e) => {
+                        if (!this.isEditable(e.target)) {
+                            e.preventDefault();
+                            this.showAlert('Копирование запрещено', 'fa-copy');
+                        }
+                    });
+
+                    // 4. Защита от вставки
+                    document.addEventListener('paste', (e) => {
+                        if (!this.isEditable(e.target)) {
+                            e.preventDefault();
+                            this.showAlert('Вставка запрещена', 'fa-paste');
+                        }
+                    });
+
+                    // 5. Защита от перетаскивания
+                    document.addEventListener('dragstart', (e) => {
+                        if (!this.isEditable(e.target)) {
+                            e.preventDefault();
+                            this.showAlert('Перетаскивание запрещено', 'fa-arrows-alt');
+                        }
+                    });
+
+                    // 6. Детектирование DevTools
+                    const detectDevTools = () => {
+                        const threshold = 160;
+                        const widthDiff = window.outerWidth - window.innerWidth;
+                        const heightDiff = window.outerHeight - window.innerHeight;
+                        
+                        if ((widthDiff > threshold || heightDiff > threshold) && !document.hidden) {
+                            this.blockDevTools();
+                        }
+                    };
+                    
+                    setInterval(detectDevTools, 1000);
+                }
+            };
+        })();
+        
+        protection.init();
+    })();
+    </script>
+
     <!-- Навигационная панель -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
         <div class="container">
@@ -289,7 +493,7 @@
                                         <th>Остаток</th>
                                         <th>Описание</th>
                                         <th>Дата</th>
-                                        <th>Действия</th>
+                                        <th class="admin-only">Действия</th>
                                     </tr>
                                 </thead>
                                 <tbody id="debts-table"></tbody>
@@ -442,6 +646,411 @@
 
     <!-- Скрипты -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="app.js"></script>
+    <script>
+    // Инициализация приложения
+    document.addEventListener('DOMContentLoaded', () => {
+        // Инициализация базы данных
+        function initDatabase() {
+            if (!localStorage.getItem('users')) {
+                const defaultUsers = [
+                    { 
+                        id: 1, 
+                        username: 'admin', 
+                        password: 'admin123',
+                        role: 'owner', 
+                        created_at: new Date().toISOString() 
+                    }
+                ];
+                localStorage.setItem('users', JSON.stringify(defaultUsers));
+            }
+            
+            if (!localStorage.getItem('debts')) {
+                localStorage.setItem('debts', JSON.stringify([]));
+            }
+        }
+        
+        initDatabase();
+        
+        // Проверка авторизованного пользователя
+        const savedUser = localStorage.getItem('currentUser');
+        if (savedUser) {
+            currentUser = JSON.parse(savedUser);
+            showApp();
+        }
+
+        // Назначение обработчиков событий
+        document.getElementById('login-btn')?.addEventListener('click', login);
+        document.getElementById('logout-btn')?.addEventListener('click', logout);
+        document.getElementById('add-debt-btn')?.addEventListener('click', showAddDebtModal);
+        document.getElementById('add-user-btn')?.addEventListener('click', showAddUserModal);
+    });
+
+    // Глобальные переменные
+    let currentUser = null;
+    let currentDebtId = null;
+    let currentUserId = null;
+
+    // Функция входа в систему
+    function login() {
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        if (!username || !password) {
+            showError('login-error', 'Заполните все поля');
+            return;
+        }
+
+        const users = JSON.parse(localStorage.getItem('users'));
+        const user = users.find(u => u.username === username && u.password === password);
+
+        if (user) {
+            currentUser = {
+                id: user.id,
+                username: user.username,
+                role: user.role
+            };
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            showApp();
+        } else {
+            showError('login-error', 'Неверный логин или пароль');
+        }
+    }
+
+    // Функция выхода из системы
+    function logout() {
+        localStorage.removeItem('currentUser');
+        currentUser = null;
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+        showLogin();
+    }
+
+    // Показать основное приложение
+    function showApp() {
+        document.getElementById('login-form').classList.add('d-none');
+        document.getElementById('app').classList.remove('d-none');
+        updateUIForRole();
+        loadDebts();
+        loadUsers();
+    }
+
+    // Показать форму входа
+    function showLogin() {
+        document.getElementById('login-form').classList.remove('d-none');
+        document.getElementById('app').classList.add('d-none');
+    }
+
+    // Обновление интерфейса в зависимости от роли
+    function updateUIForRole() {
+        if (!currentUser) return;
+
+        const userInfoEl = document.getElementById('user-info');
+        if (userInfoEl) {
+            userInfoEl.textContent = `${currentUser.username} (${getRoleName(currentUser.role)})`;
+        }
+
+        const isAdmin = ['admin', 'owner'].includes(currentUser.role.toLowerCase());
+        document.querySelectorAll('.admin-only').forEach(el => {
+            el.style.display = isAdmin ? 'block' : 'none';
+        });
+    }
+
+    // Загрузка списка долгов
+    function loadDebts() {
+        const debts = JSON.parse(localStorage.getItem('debts')) || [];
+        const table = document.getElementById('debts-table');
+        
+        table.innerHTML = debts.map(debt => `
+            <tr>
+                <td>${debt.from_user}</td>
+                <td>${debt.to_user}</td>
+                <td>${debt.amount.toFixed(2)} ₽</td>
+                <td>${debt.paid.toFixed(2)} ₽</td>
+                <td>${(debt.amount - debt.paid).toFixed(2)} ₽</td>
+                <td>${debt.description || '-'}</td>
+                <td>${new Date(debt.created_at).toLocaleDateString('ru-RU')}</td>
+                <td class="admin-only">
+                    <button class="btn btn-sm btn-warning me-2" onclick="editDebt(${debt.id})">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteDebt(${debt.id})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    // Показать модальное окно для добавления долга
+    function showAddDebtModal() {
+        currentDebtId = null;
+        document.getElementById('debtModalTitle').textContent = 'Добавить долг';
+        document.getElementById('debt-from').value = '';
+        document.getElementById('debt-to').value = '';
+        document.getElementById('debt-amount').value = '';
+        document.getElementById('debt-paid').value = '0';
+        document.getElementById('debt-description').value = '';
+        hideError('debt-error');
+
+        new bootstrap.Modal(document.getElementById('debtModal')).show();
+    }
+
+    // Редактировать долг
+    function editDebt(id) {
+        const debts = JSON.parse(localStorage.getItem('debts'));
+        const debt = debts.find(d => d.id === id);
+
+        if (debt) {
+            currentDebtId = id;
+            document.getElementById('debtModalTitle').textContent = 'Редактировать долг';
+            document.getElementById('debt-from').value = debt.from_user;
+            document.getElementById('debt-to').value = debt.to_user;
+            document.getElementById('debt-amount').value = debt.amount;
+            document.getElementById('debt-paid').value = debt.paid;
+            document.getElementById('debt-description').value = debt.description || '';
+            hideError('debt-error');
+
+            new bootstrap.Modal(document.getElementById('debtModal')).show();
+        }
+    }
+
+    // Сохранить долг
+    function saveDebt() {
+        const debtData = {
+            id: currentDebtId || Date.now(),
+            from_user: document.getElementById('debt-from').value.trim(),
+            to_user: document.getElementById('debt-to').value.trim(),
+            amount: parseFloat(document.getElementById('debt-amount').value),
+            paid: parseFloat(document.getElementById('debt-paid').value) || 0,
+            description: document.getElementById('debt-description').value.trim(),
+            created_at: currentDebtId ? 
+                JSON.parse(localStorage.getItem('debts')).find(d => d.id === currentDebtId).created_at : 
+                new Date().toISOString()
+        };
+
+        if (!debtData.from_user || !debtData.to_user || isNaN(debtData.amount)) {
+            showError('debt-error', 'Заполните все обязательные поля');
+            return;
+        }
+
+        let debts = JSON.parse(localStorage.getItem('debts'));
+        
+        if (currentDebtId) {
+            const index = debts.findIndex(d => d.id === currentDebtId);
+            debts[index] = debtData;
+        } else {
+            debts.push(debtData);
+        }
+
+        localStorage.setItem('debts', JSON.stringify(debts));
+        bootstrap.Modal.getInstance(document.getElementById('debtModal')).hide();
+        loadDebts();
+    }
+
+    // Удалить долг
+    function deleteDebt(id) {
+        if (confirm('Вы уверены, что хотите удалить этот долг?')) {
+            let debts = JSON.parse(localStorage.getItem('debts'));
+            debts = debts.filter(d => d.id !== id);
+            localStorage.setItem('debts', JSON.stringify(debts));
+            loadDebts();
+        }
+    }
+
+    // Загрузка списка пользователей
+    function loadUsers() {
+        const users = JSON.parse(localStorage.getItem('users'));
+        const table = document.getElementById('users-table');
+        
+        if (!table) return;
+        
+        table.innerHTML = users.map(user => `
+            <tr>
+                <td>${user.username}</td>
+                <td>${getRoleName(user.role)}</td>
+                <td>${new Date(user.created_at).toLocaleDateString('ru-RU')}</td>
+                <td>
+                    ${currentUser?.role === 'owner' ? `
+                    <button class="btn btn-sm btn-warning me-2" onclick="editUser(${user.id})" ${user.id === 1 ? 'disabled' : ''}>
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteUser(${user.id})" ${user.id === currentUser?.id ? 'disabled' : ''}>
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    ` : ''}
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    // Показать модальное окно для добавления пользователя
+    function showAddUserModal() {
+        currentUserId = null;
+        document.getElementById('userModalTitle').textContent = 'Добавить пользователя';
+        document.getElementById('user-username').value = '';
+        document.getElementById('user-password').value = '';
+        document.getElementById('user-role').value = 'user';
+        hideError('user-error');
+
+        if (currentUser?.role !== 'owner') {
+            document.querySelector('#user-role option[value="owner"]').style.display = 'none';
+        }
+
+        new bootstrap.Modal(document.getElementById('userModal')).show();
+    }
+
+    // Редактировать пользователя
+    function editUser(id) {
+        const users = JSON.parse(localStorage.getItem('users'));
+        const user = users.find(u => u.id === id);
+
+        if (user) {
+            currentUserId = id;
+            document.getElementById('userModalTitle').textContent = 'Редактировать пользователя';
+            document.getElementById('user-username').value = user.username;
+            document.getElementById('user-password').value = '';
+            document.getElementById('user-role').value = user.role;
+            hideError('user-error');
+
+            if (currentUser?.role !== 'owner') {
+                document.querySelector('#user-role option[value="owner"]').style.display = 'none';
+            }
+
+            new bootstrap.Modal(document.getElementById('userModal')).show();
+        }
+    }
+
+    // Сохранить пользователя
+    function saveUser() {
+        const username = document.getElementById('user-username').value.trim();
+        const password = document.getElementById('user-password').value;
+        const role = document.getElementById('user-role').value;
+
+        if (!username) {
+            showError('user-error', 'Введите логин');
+            return;
+        }
+
+        if (!currentUserId && !password) {
+            showError('user-error', 'Введите пароль');
+            return;
+        }
+
+        let users = JSON.parse(localStorage.getItem('users'));
+        const userData = {
+            id: currentUserId || Date.now(),
+            username,
+            password: password || users.find(u => u.id === currentUserId).password,
+            role,
+            created_at: currentUserId ? 
+                users.find(u => u.id === currentUserId).created_at : 
+                new Date().toISOString()
+        };
+
+        if (currentUserId) {
+            const index = users.findIndex(u => u.id === currentUserId);
+            users[index] = userData;
+        } else {
+            users.push(userData);
+        }
+
+        localStorage.setItem('users', JSON.stringify(users));
+        bootstrap.Modal.getInstance(document.getElementById('userModal')).hide();
+        loadUsers();
+
+        // Обновляем текущего пользователя если редактировали себя
+        if (currentUserId === currentUser?.id) {
+            currentUser = {
+                id: userData.id,
+                username: userData.username,
+                role: userData.role
+            };
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            updateUIForRole();
+        }
+    }
+
+    // Удалить пользователя
+    function deleteUser(id) {
+        if (confirm('Вы уверены, что хотите удалить этого пользователя?')) {
+            let users = JSON.parse(localStorage.getItem('users'));
+            users = users.filter(u => u.id !== id);
+            localStorage.setItem('users', JSON.stringify(users));
+            loadUsers();
+        }
+    }
+
+    // Вспомогательные функции
+    function getRoleName(role) {
+        const roles = {
+            'owner': 'Владелец',
+            'admin': 'Администратор',
+            'user': 'Пользователь'
+        };
+        return roles[role] || role;
+    }
+
+    function showError(elementId, message) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.textContent = message;
+            element.classList.remove('d-none');
+        }
+    }
+
+    function hideError(elementId) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.classList.add('d-none');
+        }
+    }
+
+    // Логика калькулятора
+    let calcValue = '0';
+    let calcCurrentOperation = null;
+    let calcPrevValue = null;
+
+    function calcInput(value) {
+        if (calcValue === '0' && value !== '.') {
+            calcValue = value;
+        } else {
+            calcValue += value;
+        }
+        document.getElementById('calc-display').textContent = calcValue;
+    }
+
+    function setCalcOperation(op) {
+        calcPrevValue = parseFloat(calcValue);
+        calcCurrentOperation = op;
+        calcValue = '0';
+    }
+
+    function clearCalc() {
+        calcValue = '0';
+        calcCurrentOperation = null;
+        calcPrevValue = null;
+        document.getElementById('calc-display').textContent = calcValue;
+    }
+
+    function calculate() {
+        if (!calcCurrentOperation || calcPrevValue === null) return;
+
+        const currentValue = parseFloat(calcValue);
+        let result;
+
+        switch (calcCurrentOperation) {
+            case '+': result = calcPrevValue + currentValue; break;
+            case '-': result = calcPrevValue - currentValue; break;
+            case '*': result = calcPrevValue * currentValue; break;
+            case '/': result = calcPrevValue / currentValue; break;
+            default: return;
+        }
+
+        calcValue = result.toString();
+        document.getElementById('calc-display').textContent = calcValue;
+        calcCurrentOperation = null;
+        calcPrevValue = null;
+    }
+    </script>
 </body>
 </html>
