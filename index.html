@@ -700,8 +700,11 @@
             return;
         }
 
-        const users = JSON.parse(localStorage.getItem('users'));
-        const user = users.find(u => u.username === username && u.password === password);
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const user = users.find(u => 
+            u.username.toLowerCase() === username.toLowerCase() && 
+            u.password === password
+        );
 
         if (user) {
             currentUser = {
@@ -713,6 +716,9 @@
             showApp();
         } else {
             showError('login-error', 'Неверный логин или пароль');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('username').focus();
         }
     }
 
